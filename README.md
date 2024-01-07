@@ -18,7 +18,29 @@ libtcc.dll               <- tiny c compiler
 scriptHook.asi           <- the plugin
 scripts                  <- scripts & sdk
 ```
-(Only works with RomeTW.exe v1.5)
+(Only works with RomeTW.exe v1.5)<br>
+
+if you get a missing dll error, install VC++2013 form Microsoft
+
+# HOW IT WORKS
+1. Scripts are loaded when you start/load a game, and cleared when you exit
+2. Your scripts must implement the hooks from this structure (see the examples, more hooks coming soon)
+```C
+struct Script {
+    void (*on_init)(); // called when a game is started/loaded
+
+    void (*on_destroy)(); // called when a game is closed
+
+    void (*on_advance_time)(GameDate *); // called at the end of each turn
+
+    void (*on_city_population_stats)(City *, CityStats *); // called after a city updates it's population stats (not working yet)
+
+    void (*on_city_order_stats)(City *, CityStats *); // called after a city updates it's order stats
+
+    void (*on_city_income_stats)(City *, CityStats *); // called after a city updates it's income stats (not working yet)
+};
+
+```
 
 # Thanks
 ASI-Loader: https://github.com/ThirteenAG/Ultimate-ASI-Loader <br>

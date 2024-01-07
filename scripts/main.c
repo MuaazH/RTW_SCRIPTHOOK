@@ -5,18 +5,19 @@
 #include <tccdefs.h>
 
 const char *active_scripts[] = {
-    "scripts/tribute-fix.c",
-    "scripts/total-piss.c",
-    "scripts/war-on-trespassing.c",
-    "scripts/damaged-buildings.c",
-    "scripts/city-model-fix.c",
-    "scripts/debts.c",
-    "scripts/over-population.c",
-    "scripts/blockade.c",
-    "scripts/demolition.c",
-    "scripts/building-maintenance.c",
+        "scripts/tribute-fix.c",
+//        "scripts/total-piss.c",
+//        "scripts/war-on-trespassing.c",
+//        "scripts/damaged-buildings.c",
+//        "scripts/city-model-fix.c",
+//        "scripts/debts.c",
+//        "scripts/over-population.c",
+//        "scripts/blockade.c",
+//        "scripts/demolition.c",
+//        "scripts/building-maintenance.c",
 //    "scripts/no-taxes.c",
-    "scripts/city-stats.c"
+        "scripts/one-sided-love.c",
+        "scripts/city-stats.c"
 };
 
 int get_script_count() {

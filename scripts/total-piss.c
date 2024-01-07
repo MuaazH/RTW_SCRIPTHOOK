@@ -29,7 +29,7 @@ void disband_faction_armies(Faction *pFaction) {
     }
 }
 
-void on_advance_time() {
+void on_advance_time(GameDate *date) {
     FactionsData *pData = rtw_get_faction_data();
     for (int i = 0; i < pData->factionCount; ++i)
         disband_faction_armies(pData->factions[i]);

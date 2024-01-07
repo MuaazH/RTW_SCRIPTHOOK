@@ -38,6 +38,6 @@ void on_destroy() {
     }
 }
 
-void on_advance_time() {
+void on_advance_time(GameDate *date) {
     check_tribute();
 }

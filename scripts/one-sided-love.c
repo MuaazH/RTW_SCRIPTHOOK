@@ -8,19 +8,35 @@
 static int julii = -1;
 static int gauls = -1;
 
-void loveJ() {
+static void loveJulii() {
     if (julii < 0 || gauls < 0) return;
-    Diplomacy * gaulsDiplomacy = rtw_get_diplomacy(gauls, julii);
+    Diplomacy *gaulsDiplomacy = rtw_get_diplomacy(gauls, julii);
     gaulsDiplomacy->hate = 0; // tho shall love red idiots
     gaulsDiplomacy->relationship = 0; // allied
+    Diplomacy *juliiDiplomacy = rtw_get_diplomacy(julii, gauls);
+    juliiDiplomacy->tradeRights = 1;
+    juliiDiplomacy->militaryAccess = 1;
+    juliiDiplomacy->receivedTribute.amount = 2000;
+    juliiDiplomacy->receivedTribute.turns = 20;
 }
 
+static int get_faction_id(const char *name) {
+    Faction *faction = rtw_faction_get_by_name(name);
+    return faction ? faction->id : -1;
+}
+
+/**
+ * Called from scripthook.asi
+ */
 void on_init() {
-    julii = rtw_faction_get_by_name("romans_julii")->id;
-    gauls = rtw_faction_get_by_name("gauls")->id;
-	loveJ();
+    julii = get_faction_id("romans_julii");
+    gauls = get_faction_id("gauls");
+    loveJulii();
 }
 
+/**
+ * Called from scripthook.asi
+ */
 void on_advance_time(GameDate *date) {
-	loveJ();
+    loveJulii();
 }

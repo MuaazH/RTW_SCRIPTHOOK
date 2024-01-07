@@ -15,7 +15,7 @@ const char *active_scripts[] = {
 //        "scripts/blockade.c",
 //        "scripts/demolition.c",
 //        "scripts/building-maintenance.c",
-//    "scripts/no-taxes.c",
+        "scripts/no-taxes.c",
         "scripts/one-sided-love.c",
         "scripts/city-stats.c"
 };

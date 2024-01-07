@@ -4,35 +4,61 @@
 #include <tccdefs.h>
 #include <scripthook.h>
 
-void on_city_population_stats(City *pCity, CityStats *pStats) {
-    if (!pCity->settlement)
+static int taxOrderEffect[] = {
+        4,  // low
+        -2, // normal
+        -5, // high
+        -12 // very high
+};
+
+static int positive_only(int x) {
+    return x < 0 ? 0 : x;
+}
+
+static int oldTaxMul;
+
+/**
+ * Called from scripthook.asi
+ */
+void on_init() {
+    oldTaxMul = rtw_get_tax_multiplier(0);
+    rtw_set_tax_multiplier(0, 0); // now low tax generates 0 dinarii
+}
+
+void on_destroy() {
+    rtw_set_tax_multiplier(0, oldTaxMul); // restore the game to the way it was
+}
+
+void on_city_population_stats(CityStats *pStats) {
+    if (!pStats->settlement)
         return;
-    int taxRate = pCity->settlement->taxRate;
+    int taxRate = pStats->settlement->taxRate;
     if (taxRate)
         return; // on works when taxes is set to low
-    pStats->population.growth.taxes = 5;
+    pStats->population.growth.taxes = 4;
     pStats->population.decline.taxes = 0;
     pStats->population.decline.taxes2 = 0;
     pStats->population.decline.taxes3 = 0;
     pStats->population.decline.taxes4 = 0;
 }
 
-void on_city_order_stats(City *pCity, CityStats *pStats) {
-    if (!pCity->settlement)
+void on_city_order_stats(CityStats *pStats) {
+    if (!pStats->settlement)
         return;
-    int taxRate = pCity->settlement->taxRate;
-    if (taxRate)
-        return; // on works when taxes is set to low
-    pStats->order.positive.taxes = 20;
-    pStats->order.negative.taxes = 0;
+    int taxRate = pStats->settlement->taxRate;
+    if (taxRate < 0 || 3 < taxRate)
+        return; // out of supported range
+    int effect = taxOrderEffect[taxRate];
+    pStats->order.positive.taxes = positive_only(effect);
+    pStats->order.negative.taxes = positive_only(-effect);
 }
 
-void on_city_income_stats(City *pCity, CityStats *pStats) {
-    if (!pCity->settlement)
-        return;
-    int taxRate = pCity->settlement->taxRate;
-    if (taxRate)
-        return; // on works when taxes is set to low
-    pStats->income.taxes = 0;
-    pCity->faction->outdatedTreasury = 1; // tell RTW that there is a Windows Update I mean treasury update. wow this is a long comment. In one line. No breaks. Someone will read this crap one day. Email me if you have line-wrap turned off and you read all of this, muaaz.h.is@gmail.com
-}
+// not needed, see on_init and on destroy
+//void on_city_income_stats(CityStats *pStats) {
+//    if (!pStats->settlement)
+//        return;
+//    int taxRate = pStats->settlement->taxRate;
+//    if (taxRate)
+//        return; // on works when taxes is set to low
+//    pStats->income.taxes = 0;
+//}

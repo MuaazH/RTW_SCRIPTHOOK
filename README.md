@@ -1,7 +1,7 @@
 # Work In Progress
 Work in progress
 
-# Rome total war 1.5 scripthook (Version 1.0.0)
+# Rome total war 1.5 scripthook (Version 1.1.0)
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
 
@@ -23,24 +23,45 @@ scripts                  <- scripts & sdk
 if you get a missing dll error, install VC++2013 form Microsoft
 
 # HOW IT WORKS
-1. Scripts are loaded when you start/load a game, and cleared when you exit
+1. Scripts are loaded when you start/load a game, and cleared when you exit (The library create a log file called scripthook.log when started)
 2. Your scripts must implement the hooks from this structure (see the examples, more hooks coming soon)
 ```C
 struct Script {
-    void (*on_init)(); // called when a game is started/loaded
+    /**
+     * called when a game is started/loaded
+     */
+    void (*on_init)();
 
-    void (*on_destroy)(); // called when a game is closed
+    /**
+     * called when a game is closed
+     */
+    void (*on_destroy)();
 
-    void (*on_advance_time)(GameDate *); // called at the end of each turn
+    /**
+     * called at the end of each turn
+     */
+    void (*on_advance_time)(GameDate *);
 
-    void (*on_city_population_stats)(City *, CityStats *); // called after a city updates it's population stats (not working yet)
+    /**
+     * called after a city updates it's population stats
+     */
+    void (*on_city_population_stats)(CityStats *);
 
-    void (*on_city_order_stats)(City *, CityStats *); // called after a city updates it's order stats
+    /**
+     * called after a city updates it's order stats
+     */
+    void (*on_city_order_stats)(CityStats *);
 
-    void (*on_city_income_stats)(City *, CityStats *); // called after a city updates it's income stats (not working yet)
+    /**
+     * called after a city updates it's income stats
+     */
+    void (*on_city_income_stats)(CityStats *);
 };
 
 ```
+3. See [scripthook.h](scripts/lib/scripthook.h) for API you can call
+4. If you create a mod, let me know. I like new ideas (Email in my profile)
+5. If you make a youtube video, make it funny and send me a link (Email in my profile)
 
 # Thanks
 ASI-Loader: https://github.com/ThirteenAG/Ultimate-ASI-Loader <br>

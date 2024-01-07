@@ -25,4 +25,4 @@ ASI-Loader: https://github.com/ThirteenAG/Ultimate-ASI-Loader <br>
 TinyCC: https://github.com/TinyCC/tinycc/tree/mob <br>
 
 # About this project
-This project is a joke, a way to play around with x86 and remember the golden era of programs with no anti-debug & memory protection bullshit. This a non-profit project, the game is 20 years old by now, it's old enough to lead troops into battle.
+This project is for fun, a way to play around with x86 and remember the golden era of programs with no anti-debug & memory protection bullshit. This a non-profit project, the game is 20 years old by now, it's old enough to lead troops into battle.

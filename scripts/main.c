@@ -5,7 +5,7 @@
 #include <tccdefs.h>
 
 const char *active_scripts[] = {
-        "scripts/tribute-fix.c",
+//        "scripts/tribute-fix.c",
 //        "scripts/total-piss.c",
 //        "scripts/war-on-trespassing.c",
 //        "scripts/damaged-buildings.c",
@@ -15,9 +15,10 @@ const char *active_scripts[] = {
 //        "scripts/blockade.c",
 //        "scripts/demolition.c",
 //        "scripts/building-maintenance.c",
-        "scripts/no-taxes.c",
-        "scripts/one-sided-love.c",
-        "scripts/city-stats.c"
+//        "scripts/no-taxes.c",
+//        "scripts/one-sided-love.c",
+//        "scripts/city-stats.c"
+        "scripts/dbg-building-types.c"
 };
 
 int get_script_count() {

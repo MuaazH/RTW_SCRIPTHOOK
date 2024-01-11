@@ -9,11 +9,39 @@
 #define SCRIPTHOOK_API __declspec(dllexport)
 #else
 #define SCRIPTHOOK_API extern
+
+// debug functions
+extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, ...);
+extern void rtw_log(const char *script, const char *msg);
+
 #endif
 
 #define SCRIPTHOOK_VERSION_MAJOR 1
-#define SCRIPTHOOK_VERSION_MINOR 0
+#define SCRIPTHOOK_VERSION_MINOR 2
 #define SCRIPTHOOK_VERSION_PATCH 0
+
+enum {
+    CULTURE_ROMAN = 0,
+    CULTURE_BARBARIAN,
+    CULTURE_CARTHAGINIAN,
+    CULTURE_GREEK,
+    CULTURE_EGYPTIAN,
+    CULTURE_EASTERN,
+    CULTURE_COUNT
+};
+
+enum {
+    BUILDING_TYPE_CORE = 0,
+    BUILDING_TYPE_WALL,
+    BUILDING_TYPE_BARRACKS,
+    BUILDING_TYPE_MARKET = 5,
+    BUILDING_TYPE_PORT = 7,
+    BUILDING_TYPE_SEWERS,
+    BUILDING_TYPE_FARM,
+    BUILDING_TYPE_ROAD,
+    BUILDING_TYPE_COUNT = 64
+};
+
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
@@ -38,8 +66,15 @@ typedef struct RecruitmentQueue RecruitmentQueue;
 typedef struct ConstructionSlot ConstructionSlot;
 typedef struct ConstructionQueue ConstructionQueue;
 typedef struct Building Building;
+typedef struct BuildingType BuildingType;
+typedef struct BuildingLevel BuildingLevel;
+typedef struct LinkedBuildingTypeList LinkedBuildingTypeList;
+typedef struct CityBuildings CityBuildings;
 typedef struct City City;
 typedef struct CityStats CityStats;
+typedef struct CultureData CultureData;
+typedef struct CultureModels CultureModels;
+typedef struct CultureCityModel CultureCityModel;
 
 struct ArrayList {
     void **buffer;           // A pointer to pointers
@@ -241,6 +276,12 @@ struct City {
     CityStats stats;
 };
 
+struct CityBuildings {
+    Building *byType[BUILDING_TYPE_COUNT];
+    Building *list[BUILDING_TYPE_COUNT];  // offset 0x0604  list of all buildings in order of construction
+    int count;                          // offset 0x0704
+};
+
 struct Settlement {
     int unknown0[79];
     void *city3dModel;                // offset 0x013C
@@ -256,20 +297,7 @@ struct Settlement {
     int unknown5[36];
     ConstructionQueue constructionQueue; // offset 0x039C
     int unknown6[3];
-    Building *coreBuilding;              // offset 0x0504
-    Building *wall;                      // offset 0x0508
-    Building *barracks;                  // offset 0x050C
-    Building *unknown7;                  // offset 0x0510
-    Building *unknown8;                  // offset 0x0514
-    Building *market;                    // offset 0x0518
-    Building *unknown9;                  // offset 0x051C
-    Building *port;                      // offset 0x0520
-    Building *sewers;                    // offset 0x0524
-    Building *farm;                      // offset 0x0528
-    Building *road;                      // offset 0x052C
-    Building *unknown10[53];
-    Building *buildings[64];             // offset 0x0604  list of all buildings in order of construction
-    int buildingCount;                   // offset 0x0704
+    CityBuildings buildings;
     int unknown11[240];
     int taxRate;                         // offset 0x0AC8
     int unknown12[195];
@@ -306,14 +334,14 @@ struct UnitType {
             unsigned char priAttackCharge;
         };
         struct {
-            int unknownFlag0 : 1;
-            int hasMelee : 1;
-            int hasChargeBonus : 1;
-            int unknownFlag3 : 1;
-            int hasMelee2 : 1;
-            int unknownFlag5 : 1;
-            int unknownFlag6 : 1;
-            int unknownFlag7 : 1;
+            int unknownFlag0: 1;
+            int hasMelee: 1;
+            int hasChargeBonus: 1;
+            int unknownFlag3: 1;
+            int hasMelee2: 1;
+            int unknownFlag5: 1;
+            int unknownFlag6: 1;
+            int unknownFlag7: 1;
         };
     };
     int unknown7[3];
@@ -407,7 +435,7 @@ struct Treasury {
 struct Faction {
     int unknown0[0x28];
     int id;                           // offset 0x00A0
-    int unknown1;                     // offset 0x00A4
+    int culture;                      // offset 0x00A4
     Settlement *capital;              // offset 0x00A8
     struct UnknownTextStruct3 *pLeaderName;                // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
     struct UnknownTextStruct3 *pHeirName;                  // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
@@ -476,20 +504,20 @@ struct Diplomacy {
     int relationship; // offset 0x04
 
     union {
-        int receivedAgreements;
+        unsigned int receivedAgreements;
         struct {
-            int tradeRights: 1; // if your bit is set you have tr
-            int militaryAccess: 1; // if your bit is set, you have mc
+            unsigned int tradeRights: 1; // if your bit is set you have tr
+            unsigned int militaryAccess: 1; // if your bit is set, you have mc
         };
     }; // offset 0x08
 
     union {
-        int unknownFlags; // offset 0x0C
+        unsigned int unknownFlags; // offset 0x0C
         struct {
-            int unknownFlag00: 1;
-            int unknownFlag01: 1;
-            int unknownFlag02: 1;
-            int protector: 1;         // if your bit is set, you are the slave
+            unsigned int unknownFlag00: 1;
+            unsigned int unknownFlag01: 1;
+            unsigned int unknownFlag02: 1;
+            unsigned int protector: 1;         // if your bit is set, you are the slave
         };
     };
 
@@ -517,6 +545,72 @@ struct FactionsData {
     int unknown1[0xC6];
     FactionDiplomacy diplomacy[21];
 };
+
+struct CultureCityModel { // size should be 180 = 0x6C
+    struct {
+        int unknown[4];
+    } cityModel;
+    struct {
+        int unknown[4];
+    } walls[5];
+    struct {
+        int unknown[3];
+    } card;
+};
+
+struct CultureModels { // size should be 1176 = 0x498
+    CultureCityModel cityModel[6]; // one for each level (village, town, l town, m city, l city, h city)
+    int unknown[132];
+};
+
+struct CultureData {
+    int unknown[0x5B];
+    CultureModels cultureModels[CULTURE_COUNT];
+};
+
+struct LinkedBuildingTypeList {
+    BuildingType *array;                        // offset 0x00
+    struct LinkedBuildingTypeList *next;        // offset 0x04
+    struct LinkedBuildingTypeList *parent;      // offset 0x08
+    int unknown;                                // offset 0x0C
+    int size;                                   // offset 0x10
+};
+
+struct BuildingLevel { // size 1E0 = 480
+    int unknown0[0x71];
+    void *restrictions;    // offset 0x1C4
+    unsigned short cost;   // offset 0x1C8
+    unsigned short turns;  // offset 0x1CA
+    int requiredCityLevel; // offset 0x1CC
+    int unknown1;
+    void *RecruitmentCapabilities;
+    int unknown2[2];
+};
+
+struct BuildingType { // size 0x84 = 132
+    void *_cpp_class;       // offset 0x00 (I should've done this with everything instead of calling it unknown)
+    int unknown0[4];
+    int type;               // offset 0x14  see BUILDING_TYPE_*
+    int unknown1[20];
+    const char *name;       // offset 0x68
+    int unknown2;
+    BuildingLevel *levels;  // offset 0x70
+    void *restrictions;     // offset 0x74
+    int levelCount;         // offset 0x78
+    int unknown3[2];
+};
+
+struct Building {
+    int unknown0[11];
+    BuildingType *type;        // offset 0x2C
+    unsigned char level;       // offset 0x30
+    int unknown1[5];
+    int buildByFaction;        // offset 0x48
+    int health;                // offset 0x4C
+    int unknown2[4];
+    Settlement *settlement;    // offset 0x60
+};
+
 
 /**
  *  initializes scripthook & native functions
@@ -581,5 +675,42 @@ SCRIPTHOOK_API void rtw_army_unit_disband(ArmyUnit *unit);
  * @return a random int
  */
 SCRIPTHOOK_API int rtw_random();
+
+/**
+ * Returns the tax multiplier used in calculating taxes
+ * @param rate 0 for low, 1 for normal, 2 for high, 3 for very high
+ * @return the multiplier
+ */
+SCRIPTHOOK_API int rtw_get_tax_multiplier(int rate);
+
+/**
+ * Changes the tax multiplier used in calculating taxes
+ * @param rate 0 for low, 1 for normal, 2 for high, 3 for very high
+ * @param value new value
+ */
+SCRIPTHOOK_API void rtw_set_tax_multiplier(int rate, int value);
+
+/**
+ * Returns a pointer to the city model that should be used for a city
+ * @param culture the target culture, usually the culture of the core building, or the founder faction
+ * @param level the level of the city
+ * @return pointer to the model that can be assigned to <code>Settlement.city3dModel</code>
+ */
+SCRIPTHOOK_API void *rtw_city_get_3D_model(int culture, int level);
+
+/**
+ * Returns a pointer to the wall model that should be used for a city
+ * @param culture the target culture, usually the culture of the core building, or the founder faction
+ * @param cityLevel the level of the city
+ * @param wallLevel the level of the wall
+ * @return pointer to the model that can be assigned to <code>Settlement.wall3dModel</code>
+ */
+SCRIPTHOOK_API void *rtw_city_get_wall_3D_model(int culture, int cityLevel, int wallLevel);
+
+/**
+ * Returns the list of building types from export_descr_buildings.txt
+ * @return A linked list with arrays as sub-lists on every node
+ */
+SCRIPTHOOK_API LinkedBuildingTypeList *rtw_get_building_types();
 
 #endif // RTW_SCRIPT_HOOK_H

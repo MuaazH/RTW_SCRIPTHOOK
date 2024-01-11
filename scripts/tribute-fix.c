@@ -6,8 +6,7 @@
 #include <scripthook.h>
 
 // Shit used for logging
-const char *TAG = "tribute-fix.c";
-extern void rtw_log(const char *name, const char *msg);
+static const char *SCRIPT = "tribute-fix.c";
 
 void check_tribute() {
 	FactionsData *pFactionData = rtw_get_faction_data();
@@ -27,14 +26,14 @@ void check_tribute() {
 void on_init() {
 	// nop the instruction that clears the tribute before it has been processed
     if (!rtw_update_mem((void *) 0x005AA60E, "C7 41 3C 00000000", "90 90 90 90909090")) { // patch game code
-        rtw_log(TAG, "Failed to update memory");
+        rtw_log(SCRIPT, "Failed to update memory");
     }
     check_tribute();
 }
 
 void on_destroy() {
     if (!rtw_update_mem((void *) 0x005AA60E, "90 90 90 90909090", "C7 41 3C 00000000")) { // restore original code
-        rtw_log(TAG, "Failed to update memory");
+        rtw_log(SCRIPT, "Failed to update memory");
     }
 }
 

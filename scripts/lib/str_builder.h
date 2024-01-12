@@ -27,6 +27,13 @@ void sb_reset(StrBuilder *sb);
 void sb_str(StrBuilder *sb, const char *txt);
 
 /**
+ * appends a string
+ * @param sb
+ * @param txt
+ */
+void sb_wstr(StrBuilder *sb, const unsigned short *txt);
+
+/**
  * appends s character
  * @param sb
  * @param c

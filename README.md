@@ -1,7 +1,7 @@
 # Work In Progress
 Work in progress
 
-# Rome total war 1.5 scripthook (Version 1.2.0)
+# Rome total war 1.5 scripthook (Version 1.5.0)
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
 

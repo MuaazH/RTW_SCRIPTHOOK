@@ -1,4 +1,5 @@
-// Author: MuaazH
+// Created by MuaazH <muaaz.h.is@gmail.com> on 2017-05-20.
+// This mod is a example on how to iterate building type declared in export_descr_buildings
 
 #include <tccdefs.h>
 #include <scripthook.h>

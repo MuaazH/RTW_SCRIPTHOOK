@@ -17,31 +17,8 @@ extern void rtw_log(const char *script, const char *msg);
 #endif
 
 #define SCRIPTHOOK_VERSION_MAJOR 1
-#define SCRIPTHOOK_VERSION_MINOR 2
+#define SCRIPTHOOK_VERSION_MINOR 5
 #define SCRIPTHOOK_VERSION_PATCH 0
-
-enum {
-    CULTURE_ROMAN = 0,
-    CULTURE_BARBARIAN,
-    CULTURE_CARTHAGINIAN,
-    CULTURE_GREEK,
-    CULTURE_EGYPTIAN,
-    CULTURE_EASTERN,
-    CULTURE_COUNT
-};
-
-enum {
-    BUILDING_TYPE_CORE = 0,
-    BUILDING_TYPE_WALL,
-    BUILDING_TYPE_BARRACKS,
-    BUILDING_TYPE_MARKET = 5,
-    BUILDING_TYPE_PORT = 7,
-    BUILDING_TYPE_SEWERS,
-    BUILDING_TYPE_FARM,
-    BUILDING_TYPE_ROAD,
-    BUILDING_TYPE_COUNT = 64
-};
-
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
@@ -75,6 +52,40 @@ typedef struct CityStats CityStats;
 typedef struct CultureData CultureData;
 typedef struct CultureModels CultureModels;
 typedef struct CultureCityModel CultureCityModel;
+typedef struct PopulationLimits PopulationLimits;
+typedef struct Dictionary Dictionary;
+typedef WCHAR **PTextEntry;
+
+static Dictionary *sharedDictionary = (Dictionary *) 0x026A56F8;
+static Dictionary *battleDictionary = (Dictionary *) 0x026A56FC;
+static Dictionary *diplomacyDictionary = (Dictionary *) 0x026A5704;
+static Dictionary *stratDictionary = (Dictionary *) 0x026A5700;
+static Dictionary *battleEdDictionary = (Dictionary *) 0x026A5708;
+static Dictionary *tooltipsDictionary = (Dictionary *) 0x026A5710;
+static Dictionary *menuEnglishDictionary = (Dictionary *) 0x026A5720;
+static Dictionary *extendedBiDictionary = (Dictionary *) 0x026A5724;
+
+enum {
+    CULTURE_ROMAN = 0,
+    CULTURE_BARBARIAN,
+    CULTURE_CARTHAGINIAN,
+    CULTURE_GREEK,
+    CULTURE_EGYPTIAN,
+    CULTURE_EASTERN,
+    CULTURE_COUNT
+};
+
+enum {
+    BUILDING_TYPE_CORE = 0,
+    BUILDING_TYPE_WALL,
+    BUILDING_TYPE_BARRACKS,
+    BUILDING_TYPE_MARKET = 5,
+    BUILDING_TYPE_PORT = 7,
+    BUILDING_TYPE_SEWERS,
+    BUILDING_TYPE_FARM,
+    BUILDING_TYPE_ROAD,
+    BUILDING_TYPE_COUNT = 64
+};
 
 struct ArrayList {
     void **buffer;           // A pointer to pointers
@@ -106,21 +117,14 @@ struct SettlementArrayList {
     int size;                // how many are in the list
 };
 
-struct UnknownTextStruct0 {
+struct FactionInfo {
     int unknown;
     const char *name;
 };
 
-struct UnknownTextStruct2 {
-    // first 2 char are unknown
-    // 3rd char is text length
-    // the unicode text starts at the 3rd char, it's also null-terminated
-    WCHAR *text;
-};
-
-struct UnknownTextStruct3 {
+struct TextEntryData {
     int unknown;
-    struct UnknownTextStruct2 *text;
+    PTextEntry *text;
 };
 
 struct Character {
@@ -131,7 +135,7 @@ struct Character {
     char isVisible;    // offset 0x018
     float opacity;     // offset 0x01C   0 to 1
     int unknown2[22];
-    struct UnknownTextStruct3 *name; // offset 0x078
+    struct TextEntryData *name; // offset 0x078
     int unknown3[18];
     float movementPoints; // offset 0x0C4 (read only)
     int unknown4[7];
@@ -437,9 +441,9 @@ struct Faction {
     int id;                           // offset 0x00A0
     int culture;                      // offset 0x00A4
     Settlement *capital;              // offset 0x00A8
-    struct UnknownTextStruct3 *pLeaderName;                // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct UnknownTextStruct3 *pHeirName;                  // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct UnknownTextStruct0 *pName;     // offset 0x00B4
+    struct TextEntryData *pLeaderName;                // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
+    struct TextEntryData *pHeirName;                  // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
+    struct FactionInfo *pName;     // offset 0x00B4
     int isPlayer;                     // offset 0x00B8
     int unknown2[3];
     ArrayList unknown3;               // offset 0x00C8
@@ -611,6 +615,28 @@ struct Building {
     Settlement *settlement;    // offset 0x60
 };
 
+struct PopulationLimits {
+    /**
+     * Minimum required for this level
+     */
+    int levelMin;
+
+    /**
+     * How many idiot it takes to get to the next level
+     */
+    int nextLevel;
+
+    /**
+     * Population can't be less that this, and will jump to be equal at
+     * the end of turn if it becomes smaller
+     */
+    int absoluteMinimum;
+
+    /**
+     * Squalor will increase significantly if this threshold is exceeded
+     */
+    int overPopulationThreshold;
+};
 
 /**
  *  initializes scripthook & native functions
@@ -712,5 +738,29 @@ SCRIPTHOOK_API void *rtw_city_get_wall_3D_model(int culture, int cityLevel, int 
  * @return A linked list with arrays as sub-lists on every node
  */
 SCRIPTHOOK_API LinkedBuildingTypeList *rtw_get_building_types();
+
+/**
+ * Returns a pointer to the global limits on population. Changing
+ * this will not effect cities until the next end of turn or a recalculation
+ * is forced because of some other updates
+ * @param cityLevel from 0 to 5 (inclusive)
+ * @return pointer to population limits
+ */
+SCRIPTHOOK_API PopulationLimits *rtw_get_population_limits(int cityLevel);
+
+/**
+ * Calls native game cpp function to translate a key string to a localized text
+ * @param dictionary the dictionary containing the key, dictionaries are named after files in data/text
+ * @param key key without the braces {}
+ * @return a pointer to the localized text in game memory
+ */
+SCRIPTHOOK_API PTextEntry *rtw_translate(Dictionary *dictionary, const char *key);
+
+/**
+ * UNSAFE, new text MUST be shorter or equal to original
+ * @param entry entry to update
+ * @param text new text
+ */
+SCRIPTHOOK_API void rtw_update_text(PTextEntry *entry, const WCHAR *text);
 
 #endif // RTW_SCRIPT_HOOK_H

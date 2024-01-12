@@ -1,6 +1,7 @@
+// Created by MuaazH <muaaz.h.is@gmail.com> on 2016-02-14.
 // This script fixes tribute where the AI does not pay on
-// the last turn, because the value is cleared (when the turns left is 1) before the payment is proccessed
-// Author: MuaazH
+// the last turn, because the value is cleared (when the
+// turns left is less than 1) before the payment is processed
 
 #include <tccdefs.h>
 #include <scripthook.h>

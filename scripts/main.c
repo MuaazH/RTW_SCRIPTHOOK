@@ -1,24 +1,26 @@
-// This script fixes tribute where the AI does not pay on
-// the last turn, because the value is cleared (when the turns left is less than 1) before the payment is proccessed
-// Author: MuaazH
+// Created by MuaazH <muaaz.h.is@gmail.com> on 2010-02-14.
+// this is the main script, it's a unique script use to loader other scripts
+// it is recompiled and called everytime you start/load a campaign game
 
 #include <tccdefs.h>
 
 const char *active_scripts[] = {
-//        "scripts/tribute-fix.c",
+        "scripts/tribute-fix.c",
+        "scripts/larger-population.c",
+        "scripts/no-taxes.c"
+
+
 //        "scripts/total-piss.c",
 //        "scripts/war-on-trespassing.c",
 //        "scripts/damaged-buildings.c",
 //        "scripts/city-model-fix.c",
 //        "scripts/debts.c",
-//        "scripts/over-population.c",
 //        "scripts/blockade.c",
 //        "scripts/demolition.c",
 //        "scripts/building-maintenance.c",
-//        "scripts/no-taxes.c",
 //        "scripts/one-sided-love.c",
 //        "scripts/city-stats.c"
-        "scripts/dbg-building-types.c"
+//        "scripts/dbg-building-types.c"
 };
 
 int get_script_count() {

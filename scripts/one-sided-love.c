@@ -1,4 +1,5 @@
-// Created by MUAAZ on 2024-01-07
+// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-07
+// This mod is a prank
 // One sided love from the gauls to the julii
 // This love will be reset every end of turn to full allied status
 

@@ -21,18 +21,6 @@ static const WCHAR *oldDescription = L"Low tax rate";
 static const WCHAR *newDescription = L"No taxes"; // MUST be shorter or equal to original
 static PTextEntry *pDescription = 0;
 
-//void dbg_translation(const char *key) {
-//    char buf[1024];
-//    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
-//    PTextEntry *pDescription = rtw_translate(stratDictionary, key);
-//    if (pDescription) {
-//        WCHAR *txt = **pDescription + 3;
-//        sb_reset(&sb);
-//        sb_str(&sb, " = ");
-//        sb_wstr(&sb, txt);
-//        rtw_log("dbg *************************", buf);
-//    }
-//}
 
 /**
  * Called from scripthook.asi
@@ -41,7 +29,6 @@ void on_init() {
     pDescription = rtw_translate(stratDictionary, "SMT_TAX_LEVEL_LOW");
     if (pDescription) {
         rtw_update_text(pDescription, newDescription);
-        rtw_log("dbg", "updating text");
     }
 
     oldTaxMul = rtw_get_tax_multiplier(0);
@@ -80,13 +67,3 @@ void on_city_order_stats(CityStats *pStats) {
     pStats->order.positive.taxes = positive_only(effect);
     pStats->order.negative.taxes = positive_only(-effect);
 }
-
-// not needed, see on_init and on destroy
-//void on_city_income_stats(CityStats *pStats) {
-//    if (!pStats->settlement)
-//        return;
-//    int taxRate = pStats->settlement->taxRate;
-//    if (taxRate)
-//        return; // on works when taxes is set to low
-//    pStats->income.taxes = 0;
-//}

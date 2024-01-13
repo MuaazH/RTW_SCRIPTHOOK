@@ -7,12 +7,14 @@
 const char *active_scripts[] = {
         "scripts/tribute-fix.c",
         "scripts/larger-population.c",
-        "scripts/no-taxes.c"
+        "scripts/no-taxes.c",
+//        "scripts/diplomacy-dbg.c",
+//        "scripts/damaged-buildings.c"
+        "scripts/gaza.c"
 
 
 //        "scripts/total-piss.c",
 //        "scripts/war-on-trespassing.c",
-//        "scripts/damaged-buildings.c",
 //        "scripts/city-model-fix.c",
 //        "scripts/debts.c",
 //        "scripts/blockade.c",

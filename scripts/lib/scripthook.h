@@ -17,8 +17,12 @@ extern void rtw_log(const char *script, const char *msg);
 #endif
 
 #define SCRIPTHOOK_VERSION_MAJOR 1
-#define SCRIPTHOOK_VERSION_MINOR 5
+#define SCRIPTHOOK_VERSION_MINOR 7
 #define SCRIPTHOOK_VERSION_PATCH 0
+
+#define DEMOLITION_DEFAULT 0
+#define DEMOLITION_ALLOW 1
+#define DEMOLITION_FORBID 2
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
@@ -54,6 +58,7 @@ typedef struct CultureModels CultureModels;
 typedef struct CultureCityModel CultureCityModel;
 typedef struct PopulationLimits PopulationLimits;
 typedef struct Dictionary Dictionary;
+typedef struct Seaport Seaport;
 typedef WCHAR **PTextEntry;
 
 static Dictionary *sharedDictionary = (Dictionary *) 0x026A56F8;
@@ -64,6 +69,21 @@ static Dictionary *battleEdDictionary = (Dictionary *) 0x026A5708;
 static Dictionary *tooltipsDictionary = (Dictionary *) 0x026A5710;
 static Dictionary *menuEnglishDictionary = (Dictionary *) 0x026A5720;
 static Dictionary *extendedBiDictionary = (Dictionary *) 0x026A5724;
+
+enum {
+    DS_ALLIED = 0,
+    DS_SUSPICIOUS = 100,
+    DS_NEUTRAL = 200,
+    DS_HOSTILE = 400,
+    DS_AT_WAR = 600
+};
+
+enum {
+    PORT_ORIENTATION_EAST = 0xC000,
+    PORT_ORIENTATION_SOUTH = 0x0000,
+    PORT_ORIENTATION_WEST = 0x4000,
+    PORT_ORIENTATION_NORTH = 0x8000
+};
 
 enum {
     CULTURE_ROMAN = 0,
@@ -283,28 +303,32 @@ struct City {
 struct CityBuildings {
     Building *byType[BUILDING_TYPE_COUNT];
     Building *list[BUILDING_TYPE_COUNT];  // offset 0x0604  list of all buildings in order of construction
-    int count;                          // offset 0x0704
+    int count;                            // offset 0x0704
 };
 
 struct Settlement {
-    int unknown0[79];
+    int unknown0[3];
+    int posX;
+    int posY;
+    int unknown1[74];
     void *city3dModel;                // offset 0x013C
     void *wall3dModel;                // offset 0x0140
-    int unknown1[17];
+    int unknown2[16];
+    Seaport *port;                    // offset 0x0184
     const char *name;                 // offset 0x0188
-    int unknown2[2];
+    int unknown3[2];
     Faction *faction;                 // offset 0x0194
-    int unknown3[7];
+    int unknown4[7];
     int level;                        // offset 0x01B4
-    int unknown4[10];
+    int unknown5[10];
     RecruitmentQueue recruitmentQueue; // offset 0x01E0
-    int unknown5[36];
+    int unknown6[36];
     ConstructionQueue constructionQueue; // offset 0x039C
-    int unknown6[3];
+    int unknown7[3];
     CityBuildings buildings;
-    int unknown11[240];
+    int unknown8[240];
     int taxRate;                         // offset 0x0AC8
-    int unknown12[195];
+    int unknown9[195];
     City city;                           // offset 0x0DD8
 };
 
@@ -492,19 +516,16 @@ struct GameDate {
     int season;
 };
 
-#define DS_ALLIED       0
-#define DS_SUSPICIOUS   100
-#define DS_NEUTRAL      200
-#define DS_HOSTILE      400
-#define DS_AT_WAR       600
 
 struct Diplomacy {
     int unknown0;
 
-    // 0 = ALLIED, 100 = SUSPICIOUS, 200 = NEUTRAL, 400 = HOSTILE, 600 = AT_WAR
-    // Only accepts these values, some of them are not used in game, like 100 and 400
-    // This value is your standing alone. You can declare war on someone who thinks you are their ally
-    // if you put a value not on this list, the game text may say ally, even if it's 599
+    /**
+     * 0 = ALLIED, 100 = SUSPICIOUS, 200 = NEUTRAL, 400 = HOSTILE, 600 = AT_WAR
+     * Only accepts these values, some of them are not used in game, like 100 and 400
+     * This value is your standing alone. You can declare war on someone who thinks you are their ally
+     * if you put a value not on this list, the game text may say ally, even if it's 599
+     */
     int relationship; // offset 0x04
 
     union {
@@ -529,14 +550,58 @@ struct Diplomacy {
     // How much do you hate?
     int hate; // offset 0x10
 
-    int unknown1[10]; // offset 0x14 - size 0x28
+    int unknown1;
+
+    /**
+     * How many cumulative turns have you been in alliance for since start of game
+     */
+    int allianceTurns;
+
+    /**
+     * How many cumulative turns have you been at war for since start of game
+     */
+    int hostilityTurns;
+
+    int unknonw2;
+    int unknonw3;
+    int unknonw4;
+    int unknonw5;
+    int unknonw6;
+    int unknonw7;
+    int unknonw8;
 
     struct {
         int amount; // offset 0x3C
         int turns; // offset 0x40
     } receivedTribute;
 
-    int unknown2[12];
+    int unknonw9;
+    int unknonw10;
+    int unknonw11;
+    int unknonw12;
+    int unknonw13;
+    int unknonw14;
+    int unknonw15;
+    int unknonw16;
+    int unknonw17;
+
+    /**
+     * turns since last diplomatic contact
+     */
+    int turnsSinceLastContact;
+
+    /**
+     * NEEDS MORE TESTING
+     * Make a deal +1, cancel a deal -1, fail to reach deal -1.
+     */
+    int reputation;
+
+    /**
+     * related to reputation somehow, for good deals, it starts negative, for bad actions it's positive,
+     * it loses value over time approaching zero
+     * Anger?
+     */
+    int unknown18;
 };
 
 typedef Diplomacy FactionDiplomacy[21];
@@ -595,13 +660,18 @@ struct BuildingType { // size 0x84 = 132
     void *_cpp_class;       // offset 0x00 (I should've done this with everything instead of calling it unknown)
     int unknown0[4];
     int type;               // offset 0x14  see BUILDING_TYPE_*
-    int unknown1[20];
-    const char *name;       // offset 0x68
+    int unknown1[17];
+    char isWall;
+    char isPort;
+    char isCore;
     int unknown2;
+    int unknown3;
+    const char *name;       // offset 0x68
+    int unknown4;
     BuildingLevel *levels;  // offset 0x70
     void *restrictions;     // offset 0x74
     int levelCount;         // offset 0x78
-    int unknown3[2];
+    int unknown5[2];
 };
 
 struct Building {
@@ -636,6 +706,28 @@ struct PopulationLimits {
      * Squalor will increase significantly if this threshold is exceeded
      */
     int overPopulationThreshold;
+};
+
+struct Seaport {
+    int unknown0[3];
+    int villagePosX;
+    int villagePosY;
+    int unknown1[7];
+    Settlement *settlement;
+    int region;
+    unsigned short orientation;
+    int level;
+    int culture;
+    int unknown2[3];
+    int posX;
+    int posY;
+    int rallyPointX;
+    int rallyPointY;
+    int unknown3;
+    Faction *faction;
+    int unknown4[3];
+    void *village3DModel;
+    void *port3DModel;
 };
 
 /**
@@ -762,5 +854,19 @@ SCRIPTHOOK_API PTextEntry *rtw_translate(Dictionary *dictionary, const char *key
  * @param text new text
  */
 SCRIPTHOOK_API void rtw_update_text(PTextEntry *entry, const WCHAR *text);
+
+/**
+ * Destroys a building, use carefully, core buildings are related to
+ * city level, you need to reset it after destroying a core building
+ * @param pBuilding the building to be destroyed
+ */
+SCRIPTHOOK_API void rtw_building_destroy(Building *building);
+
+/**
+ * Returns a region
+ * @param id
+ * @return null if the id is not valid
+ */
+SCRIPTHOOK_API Region *rtw_get_region(int id);
 
 #endif // RTW_SCRIPT_HOOK_H

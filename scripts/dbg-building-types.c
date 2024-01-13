@@ -5,7 +5,7 @@
 #include <scripthook.h>
 #include <str_builder.h>
 
-static const char *SCRIPT = "dbg-building-types.c";
+static const char *SCRIPT = "scripts/dbg-building-types.c";
 
 void on_init() {
     char buf[128];

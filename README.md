@@ -76,7 +76,7 @@ struct Script {
 5. If you make a youtube video, make it funny and send me a link (Email in my profile)
 
 # Change log
-I did not have time to write a change log, email me if you want to write on yourself.
+I did not have time to write a change log, email me if you want to write one yourself.
 
 # Thanks
 ASI-Loader: https://github.com/ThirteenAG/Ultimate-ASI-Loader <br>

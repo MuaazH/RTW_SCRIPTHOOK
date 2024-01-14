@@ -17,8 +17,8 @@ extern void rtw_log(const char *script, const char *msg);
 #endif
 
 #define SCRIPTHOOK_VERSION_MAJOR 1
-#define SCRIPTHOOK_VERSION_MINOR 7
-#define SCRIPTHOOK_VERSION_PATCH 0
+#define SCRIPTHOOK_VERSION_MINOR 8
+#define SCRIPTHOOK_VERSION_PATCH 2
 
 #define DEMOLITION_DEFAULT 0
 #define DEMOLITION_ALLOW 1
@@ -320,7 +320,8 @@ struct Settlement {
     Faction *faction;                 // offset 0x0194
     int unknown4[7];
     int level;                        // offset 0x01B4
-    int unknown5[10];
+    int culture;                      // offset 0x01B8
+    int unknown5[9];
     RecruitmentQueue recruitmentQueue; // offset 0x01E0
     int unknown6[36];
     ConstructionQueue constructionQueue; // offset 0x039C
@@ -629,7 +630,8 @@ struct CultureCityModel { // size should be 180 = 0x6C
 
 struct CultureModels { // size should be 1176 = 0x498
     CultureCityModel cityModel[6]; // one for each level (village, town, l town, m city, l city, h city)
-    int unknown[132];
+    int unknown[131];
+    int maxCityLevel;
 };
 
 struct CultureData {

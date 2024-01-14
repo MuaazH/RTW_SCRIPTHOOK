@@ -24,11 +24,3 @@ void on_advance_time(GameDate *pDate) {
     }
 }
 
-int on_demolition_check(Building *building) {
-    if (!building->type)
-        return DEMOLITION_FORBID;
-    BuildingType *type = building->type;
-    if (type->isWall || type->type == BUILDING_TYPE_FARM)
-        return DEMOLITION_ALLOW;
-    return DEMOLITION_DEFAULT;
-}

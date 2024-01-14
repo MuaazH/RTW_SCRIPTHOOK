@@ -6,4 +6,19 @@
 
 const char *SCRIPT = "scripts/damaged-buildings.c";
 
-// WORK IN PROGRESS, CHECK LATER
+/**
+ * Called from scripthook.asi
+ */
+void on_advance_time(GameDate *pDate) {
+    Region *region = rtw_get_region(48);
+    if (!region) {
+        return;
+    }
+    Settlement *settlement = region->settlement;
+    if (!region->settlement)
+        return;
+    Building *barracks = settlement->buildings.byType[BUILDING_TYPE_BARRACKS];
+    if (!barracks)
+        return;
+    rtw_building_destroy(barracks);
+}

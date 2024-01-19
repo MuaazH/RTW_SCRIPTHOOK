@@ -1,4 +1,4 @@
-# Rome total war 1.5 scripthook (Version 1.8.2)
+# Rome total war 1.9 scripthook (Version 2.0.0)
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
 
@@ -22,7 +22,7 @@ libtcc.dll               <- tiny c compiler
 scriptHook.asi           <- the plugin
 scripts                  <- scripts & sdk
 ```
-(Only works with RomeTW.exe v1.5)<br>
+(Only works with RomeTW-ALX.exe v1.9)<br>
 
 if you get a missing dll error, install VC++2013 form Microsoft
 
@@ -32,6 +32,7 @@ if you get a missing dll error, install VC++2013 form Microsoft
 3. Your scripts must implement the hooks from this structure (see the examples, more hooks coming soon)
 ```C
 struct Script {
+
     /**
      * called when a game is started/loaded
      */
@@ -45,7 +46,7 @@ struct Script {
     /**
      * called at the end of each turn
      */
-    void (*on_advance_time)(GameDate *);
+    void (*on_end_of_turn)(GameDate *);
 
     /**
      * called after a city updates it's population stats
@@ -70,9 +71,15 @@ struct Script {
 
     /**
      * called to check whether a building can be demolished
-     * @return DEMOLITION_DEFAULT for default game behavior, DEMOLITION_ALLOW to allow demolition, DEMOLITION_FORBID to forbid demolition
+     * @return OPTION_DEFAULT for default game behavior, OPTION_ALLOW to allow demolition, OPTION_PREVENT to forbid demolition
      */
     int (*on_demolition_check)(Building *);
+
+    /**
+     * called to check whether an abandoned fort can despawn or not
+     * @return OPTION_DEFAULT for default game behavior, OPTION_PREVENT to keep the abandoned fort
+     */
+    int (*on_fort_despawn)(Fort *);
 
     /**
      * called to after a building has been demolished

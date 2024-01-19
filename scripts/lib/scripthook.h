@@ -16,13 +16,13 @@ extern void rtw_log(const char *script, const char *msg);
 
 #endif
 
-#define SCRIPTHOOK_VERSION_MAJOR 1
-#define SCRIPTHOOK_VERSION_MINOR 8
-#define SCRIPTHOOK_VERSION_PATCH 2
+#define SCRIPTHOOK_VERSION_MAJOR 2
+#define SCRIPTHOOK_VERSION_MINOR 0
+#define SCRIPTHOOK_VERSION_PATCH 0
 
-#define DEMOLITION_DEFAULT 0
-#define DEMOLITION_ALLOW 1
-#define DEMOLITION_FORBID 2
+#define OPTION_DEFAULT 0
+#define OPTION_ALLOW 1
+#define OPTION_PREVENT 2
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
@@ -33,6 +33,7 @@ typedef struct SoliderUpgrades SoliderUpgrades;
 typedef struct Army Army;
 typedef struct ArmyUnit ArmyUnit;
 typedef struct ArrayList ArrayList;
+typedef struct ArmyUnitArrayList ArmyUnitArrayList;
 typedef struct RegionArrayList RegionArrayList;
 typedef struct ArmyArrayList ArmyArrayList;
 typedef struct CharacterArrayList CharacterArrayList;
@@ -49,7 +50,7 @@ typedef struct ConstructionQueue ConstructionQueue;
 typedef struct Building Building;
 typedef struct BuildingType BuildingType;
 typedef struct BuildingLevel BuildingLevel;
-typedef struct LinkedBuildingTypeList LinkedBuildingTypeList;
+typedef struct BuildingTypeList BuildingTypeList;
 typedef struct CityBuildings CityBuildings;
 typedef struct City City;
 typedef struct CityStats CityStats;
@@ -59,16 +60,18 @@ typedef struct CultureCityModel CultureCityModel;
 typedef struct PopulationLimits PopulationLimits;
 typedef struct Dictionary Dictionary;
 typedef struct Seaport Seaport;
+typedef struct Person Person;
+typedef struct Fort Fort;
 typedef WCHAR **PTextEntry;
 
-static Dictionary *sharedDictionary = (Dictionary *) 0x026A56F8;
-static Dictionary *battleDictionary = (Dictionary *) 0x026A56FC;
-static Dictionary *diplomacyDictionary = (Dictionary *) 0x026A5704;
-static Dictionary *stratDictionary = (Dictionary *) 0x026A5700;
-static Dictionary *battleEdDictionary = (Dictionary *) 0x026A5708;
-static Dictionary *tooltipsDictionary = (Dictionary *) 0x026A5710;
-static Dictionary *menuEnglishDictionary = (Dictionary *) 0x026A5720;
-static Dictionary *extendedBiDictionary = (Dictionary *) 0x026A5724;
+static Dictionary *sharedDictionary = (Dictionary *) 0x0275E518; // 1.9
+static Dictionary *battleDictionary = (Dictionary *) 0x0275E51C; // 1.9
+static Dictionary *diplomacyDictionary = (Dictionary *) 0x0275E524; // 1.9
+static Dictionary *stratDictionary = (Dictionary *) 0x0275E520; // 1.9
+static Dictionary *battleEdDictionary = (Dictionary *) 0x0275E528; // 1.9
+static Dictionary *tooltipsDictionary = (Dictionary *) 0x0275E530; // 1.9
+static Dictionary *menuEnglishDictionary = (Dictionary *) 0x0275E540; // 1.9
+static Dictionary *extendedBiDictionary = (Dictionary *) 0x0275E544; // 1.9
 
 enum {
     DS_ALLIED = 0,
@@ -79,11 +82,17 @@ enum {
 };
 
 enum {
-    PORT_ORIENTATION_EAST = 0xC000,
-    PORT_ORIENTATION_SOUTH = 0x0000,
-    PORT_ORIENTATION_WEST = 0x4000,
-    PORT_ORIENTATION_NORTH = 0x8000
+    ORIENTATION_EAST = 0xC000,
+    ORIENTATION_SOUTH = 0x0000,
+    ORIENTATION_WEST = 0x4000,
+    ORIENTATION_NORTH = 0x8000
 };
+
+typedef int Season;
+
+static const Season WINTER = 0;
+static const Season SUMMER = 2;
+
 
 enum {
     CULTURE_ROMAN = 0,
@@ -113,6 +122,12 @@ struct ArrayList {
     int size;                // how many are in the list
 };
 
+struct ArmyUnitArrayList {
+    ArmyUnit **buffer;       // A pointer to pointers
+    int capacity;            // how much is allocated
+    int size;                // how many are in the list
+};
+
 struct RegionArrayList {
     Region **buffer;         // A pointer to pointers
     int capacity;            // how much is allocated
@@ -137,14 +152,33 @@ struct SettlementArrayList {
     int size;                // how many are in the list
 };
 
+struct GameDate {
+    int year;
+    Season season;
+};
+
 struct FactionInfo {
     int unknown;
     const char *name;
 };
 
-struct TextEntryData {
-    int unknown;
-    PTextEntry *text;
+struct Person {
+    int unknown0;
+    PTextEntry *name;
+    int unknown1[9];
+    int command;
+    int influence;
+    int management;
+    int subterfuge;
+    int unknown2[53];
+    ArrayList retinue;
+    int unknown3[23];
+    GameDate birthDate;
+    int unknown4[24];
+    struct {
+        int unknown5: 6;
+        int age: 7;
+    };
 };
 
 struct Character {
@@ -160,9 +194,10 @@ struct Character {
     float movementPoints; // offset 0x0C4 (read only)
     int unknown4[7];
     Army *army;           // offset 0x0E4
-    int unknown5[24];
+    int unknown5[22];
+    unsigned short orientation;
+    int unknown6;
     float maxMovementPoints; // offset 0x0148
-    float movementPoints2; // offset 0x014C
 };
 
 struct RecruitmentSlot {
@@ -422,43 +457,44 @@ struct Army {
     int unknown0[0x15];
     Faction *faction;
     int unknown1;
-    ArmyUnit **units; // offset 0x5C  max of 20 pointers
-    int unknown2;
-    int unitCount;
+    ArmyUnitArrayList units;
     int unknown3[34];
     Character *character;
+    int unknown4[6];
+    ArrayList agents;
 };
 
 struct Treasury {
     Faction *faction;
     int gold; // current money
-    int unknown;
-    struct {
-        int farming;
-        int taxes;
-        int mining;
-        int trade;
-        int construction;
-        int corruption;
-        int senateTransactions;
-        int diplomacy;
-        int diplomacy2; // SuperFaction?
-        int other;
-    } income;
-    struct {
-        int wages;
-        int army;
-        int construction;
-        int construction2;
-        int recruitment;
-        int recruitment2;
-        int senateTransactions;
-        int diplomacy;
-        int diplomacy2; // SuperFaction?
-        int corruption;
-        int entertainment;
-        int other;
-    } spending;
+// Not valid for 1.9
+//    int unknown;
+//    struct {
+//        int farming;
+//        int taxes;
+//        int mining;
+//        int trade;
+//        int construction;
+//        int corruption;
+//        int senateTransactions;
+//        int diplomacy;
+//        int diplomacy2; // SuperFaction?
+//        int other;
+//    } income;
+//    struct {
+//        int wages;
+//        int army;
+//        int construction;
+//        int construction2;
+//        int recruitment;
+//        int recruitment2;
+//        int senateTransactions;
+//        int diplomacy;
+//        int diplomacy2; // SuperFaction?
+//        int corruption;
+//        int entertainment;
+//        int other;
+//    } spending;
 };
 
 struct Faction {
@@ -466,34 +502,34 @@ struct Faction {
     int id;                           // offset 0x00A0
     int culture;                      // offset 0x00A4
     Settlement *capital;              // offset 0x00A8
-    struct TextEntryData *pLeaderName;                // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct TextEntryData *pHeirName;                  // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct FactionInfo *pName;     // offset 0x00B4
+    Person *pLeaderName;              // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
+    Person *pHeirName;                // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
+    struct FactionInfo *pName;        // offset 0x00B4
     int isPlayer;                     // offset 0x00B8
-    int unknown2[3];
-    ArrayList unknown3;               // offset 0x00C8
+    int unknown2[4];
+    ArrayList unknown3;
     int unknown4[5];
-    CharacterArrayList characters;    // offset 0x00E8
-    ArmyArrayList armies;             // offset 0x00F4 (in cities + outside cities + naval)
-    RegionArrayList regions;          // offset 0x0100
-    SettlementArrayList settlements;  // offset 0x010C
-    ArrayList forts;                  // offset 0x0118
-    ArrayList watchtowers;            // offset 0x0124
-    ArrayList ports;                  // offset 0x0130
+    CharacterArrayList characters;
+    ArmyArrayList armies;
+    RegionArrayList regions;
+    SettlementArrayList settlements;
+    ArrayList forts;
+    ArrayList watchtowers;
+    ArrayList ports;
     int unknown5;
-    ArrayList unknown6;               // offset 0x0140
-    int unknown7;                     // offset 0x014C  some kind of boolean
-    int unknown8;                     // offset 0x0150
-    ArrayList unknown9;               // offset 0x0154
-    ArrayList unknown10;              // offset 0x0160
+    ArrayList unknown6;
+    int unknown7;
+    int unknown8;
+    ArrayList unknown9;
+    ArrayList unknown10;
     int unknown11[5];
-    void *visibility;                 // offset 0x0180  fog of war data
-    ArrayList missions;               // offset 0x0184
-    ArrayList unknown12;              // offset 0x0190
+    void *fogOfWar;
+    ArrayList missions;
+    ArrayList unknown12;
     int unknown13[3];
-    ArrayList unknown14;              // offset 0x01A8
-    ArrayList unknown15;              // offset 0x01B4
-    ArrayList rankingHistory;         // offset 0x01C0
+    ArrayList unknown14;
+    ArrayList unknown15;
+    ArrayList rankingHistory;
     int unknown16[2];
     union {
         int flags;
@@ -506,17 +542,11 @@ struct Faction {
         };
     } managementSettings;
     int unknown17[0xC2];
-    int outdatedTreasury;             // offset 0x04E4    0 or 1
-    int startingMoney;                // offset 0x04E8 Gold at the start of turn
+    int outdatedTreasury;             // offset 0x04E8    0 or 1
+    int startingMoney;                // offset 0x04EC Gold at the start of turn
     int unknown18[5];
     Treasury treasury;
 };
-
-struct GameDate {
-    int year;
-    int season;
-};
-
 
 struct Diplomacy {
     int unknown0;
@@ -639,12 +669,12 @@ struct CultureData {
     CultureModels cultureModels[CULTURE_COUNT];
 };
 
-struct LinkedBuildingTypeList {
-    BuildingType *array;                        // offset 0x00
-    struct LinkedBuildingTypeList *next;        // offset 0x04
-    struct LinkedBuildingTypeList *parent;      // offset 0x08
-    int unknown;                                // offset 0x0C
-    int size;                                   // offset 0x10
+struct BuildingTypeList {
+    BuildingType *array;                  // offset 0x00
+    BuildingTypeList *next;               // offset 0x04
+    BuildingTypeList *parent;             // offset 0x08
+    int capacity;                         // offset 0x0C
+    int size;                             // offset 0x10
 };
 
 struct BuildingLevel { // size 1E0 = 480
@@ -732,6 +762,17 @@ struct Seaport {
     void *port3DModel;
 };
 
+struct Fort {
+    int unknown0[3];
+    int posX;
+    int posY;
+    int unknown1[11];
+    Army *army;
+    int unknown2[40];
+    int region;
+    Faction *faction;
+};
+
 /**
  *  initializes scripthook & native functions
  */
@@ -797,6 +838,18 @@ SCRIPTHOOK_API void rtw_army_unit_disband(ArmyUnit *unit);
 SCRIPTHOOK_API int rtw_random();
 
 /**
+ * Returns the global tax multiplier used in calculating taxes
+ * @return the multiplier
+ */
+SCRIPTHOOK_API float rtw_get_global_tax_multiplier();
+
+/**
+ * Sets the global tax multiplier used in calculating taxes
+ * @param value the new multiplier
+ */
+SCRIPTHOOK_API void rtw_set_global_tax_multiplier(float value);
+
+/**
  * Returns the tax multiplier used in calculating taxes
  * @param rate 0 for low, 1 for normal, 2 for high, 3 for very high
  * @return the multiplier
@@ -831,7 +884,7 @@ SCRIPTHOOK_API void *rtw_city_get_wall_3D_model(int culture, int cityLevel, int 
  * Returns the list of building types from export_descr_buildings.txt
  * @return A linked list with arrays as sub-lists on every node
  */
-SCRIPTHOOK_API LinkedBuildingTypeList *rtw_get_building_types();
+SCRIPTHOOK_API BuildingTypeList *rtw_get_building_types();
 
 /**
  * Returns a pointer to the global limits on population. Changing

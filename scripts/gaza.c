@@ -7,7 +7,7 @@
 /**
  * Called from scripthook.asi
  */
-void on_advance_time(GameDate *pDate) {
+void on_end_of_turn(GameDate *pDate) {
     for (int i = 0;; ++i) {
         Region *region = rtw_get_region(i);
         if (!region)

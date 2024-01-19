@@ -13,13 +13,13 @@ void disband_faction_armies(Faction *pFaction) {
     for (int j = 0; j < pArmyList->size; ++j) {
         Army *pArmy = pArmyList->buffer[j];
 
-        for (int k = 0; k < pArmy->unitCount; ++k) {
-            ArmyUnit *pUnit = pArmy->units[k];
+        for (int k = 0; k < pArmy->units.size; ++k) {
+            ArmyUnit *pUnit = pArmy->units.buffer[k];
             if (pUnit->general) continue; // this is a general unit
-            int n = pArmy->unitCount;
+            int n = pArmy->units.size;
             rtw_army_unit_disband(pUnit); // haha, so funny
             // check if the disband worked. Ships can't be disband at sea
-            if (n > pArmy->unitCount)
+            if (n > pArmy->units.size)
                 k--;
         }
 
@@ -30,7 +30,7 @@ void disband_faction_armies(Faction *pFaction) {
     }
 }
 
-void on_advance_time(GameDate *date) {
+void on_end_of_turn(GameDate *date) {
     FactionsData *pData = rtw_get_faction_data();
     for (int i = 0; i < pData->factionCount; ++i)
         disband_faction_armies(pData->factions[i]);

@@ -5,29 +5,53 @@
 #include <tccdefs.h>
 
 const char *active_scripts[] = {
-        "scripts/tribute-fix.c",
-        "scripts/larger-population.c",
-        "scripts/no-taxes.c",
-        "scripts/demolition.c",
+        "scripts/sticky-fort.c",
+//        "scripts/tribute-fix.c",
+//        "scripts/larger-population.c",
+//        "scripts/no-taxes.c",
+//        "scripts/demolition.c",
 //        "scripts/diplomacy-dbg.c",
 //        "scripts/damaged-buildings.c"
-        "scripts/gaza.c"
-
-
+//        "scripts/gaza.c"
 //        "scripts/total-piss.c",
 //        "scripts/war-on-trespassing.c",
-//        "scripts/city-model-fix.c",
 //        "scripts/debts.c",
 //        "scripts/blockade.c",
 //        "scripts/demolition.c",
 //        "scripts/building-maintenance.c",
 //        "scripts/one-sided-love.c",
-//        "scripts/city-stats.c"
-//        "scripts/dbg-building-types.c"
+//        "scripts/city-stats.c",
+//        "scripts/dbg-building-types.c",
+
+
+
+
+
+
+
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+// DO NOT EDIT ANYTHING AFTER THIS COMMENT
+
+
+
+        0 // THE LAST THING ON THE LIST, DO NOT REMOVE
 };
 
+
 int get_script_count() {
-    return sizeof(active_scripts) / sizeof(void *);
+//    return sizeof(active_scripts) / sizeof(void *);
+    int count = 0;
+    while (active_scripts[count])
+        count++;
+    return count;
 }
 
 const char *get_script(int index) {

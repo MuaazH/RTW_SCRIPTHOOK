@@ -13,19 +13,19 @@ const char *SCRIPT = "scripts/demolition.c";
  */
 int on_demolition_check(Building *building) {
     if (!building->type)
-        return DEMOLITION_DEFAULT; // I ain't touch this shit
+        return OPTION_DEFAULT; // I ain't touch this shit
 
     BuildingType *type = building->type;
 
     // walls & core
     if (type->isWall || type->isCore)
-        return DEMOLITION_ALLOW;
+        return OPTION_ALLOW;
 
     // farms
     if (type->type == BUILDING_TYPE_FARM)
-        return DEMOLITION_ALLOW;
+        return OPTION_ALLOW;
 
-    return DEMOLITION_DEFAULT;
+    return OPTION_DEFAULT;
 }
 
 /**

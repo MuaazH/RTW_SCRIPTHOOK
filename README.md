@@ -8,9 +8,6 @@ Your only option is to israel the software, i.e. steal it and claim its yours, t
 Please Visit: [taxpayersforpeace.org](https://taxpayersforpeace.org)
 
 # Work In Progress
-- I added the ability to destroy core_building (goverment building)
-- Walls not disappearing after being destroyed was fixed
-
 I'm adding features as I go along, I don't really have a plan. I welcome new ideas. Someone should probably
 write some docs for this crap
 

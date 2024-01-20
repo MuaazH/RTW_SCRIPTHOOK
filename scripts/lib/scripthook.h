@@ -18,7 +18,7 @@ extern void rtw_log(const char *script, const char *msg);
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
 #define SCRIPTHOOK_VERSION_MINOR 0
-#define SCRIPTHOOK_VERSION_PATCH 0
+#define SCRIPTHOOK_VERSION_PATCH 1
 
 #define OPTION_DEFAULT 0
 #define OPTION_ALLOW 1

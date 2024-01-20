@@ -25,7 +25,7 @@ void logDiplomacy() {
         Faction *faction = pData->sortedFactions[i];
         Diplomacy *diplomacy = rtw_get_diplomacy(i, player);
         sb_reset(&sb);
-        sb_str(&sb, faction->pName->name);
+        sb_str(&sb, faction->info->name);
         int pos = 50;
         int *pVal = &diplomacy->hate;
         for (int j = 0; j < 24; ++j) {

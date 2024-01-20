@@ -12,13 +12,14 @@
 
 // debug functions
 extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, ...);
+
 extern void rtw_log(const char *script, const char *msg);
 
 #endif
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 0
-#define SCRIPTHOOK_VERSION_PATCH 2
+#define SCRIPTHOOK_VERSION_MINOR 1
+#define SCRIPTHOOK_VERSION_PATCH 0
 
 #define OPTION_DEFAULT 0
 #define OPTION_ALLOW 1
@@ -26,6 +27,7 @@ extern void rtw_log(const char *script, const char *msg);
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
+typedef struct CharacterType CharacterType;
 typedef struct Settlement Settlement;
 typedef struct Region Region;
 typedef struct UnitType UnitType;
@@ -94,6 +96,14 @@ typedef int Season;
 static const Season WINTER = 0;
 static const Season SUMMER = 2;
 
+typedef int CharacterRole;
+
+static const CharacterRole SPY = 0;
+static const CharacterRole ASSASSIN = 1;
+static const CharacterRole DIPLOMAT = 2;
+static const CharacterRole ADMIRAL = 3;
+static const CharacterRole CAPTAIN = 4;
+static const CharacterRole FAMILY_MEMBER = 5;
 
 enum {
     CULTURE_ROMAN = 0,
@@ -175,11 +185,26 @@ struct Person {
     ArrayList retinue;
     int unknown3[23];
     GameDate birthDate;
-    int unknown4[24];
+    GameDate deathDate;
+    int childrenCount;
+    Faction *faction;
+    int unknown4;
+    int unknown5;
+    Person *father;
+    Person *spouse;
+    Person *children[4];
+    int unknown6[12];
     struct {
-        int unknown5: 6;
+        int isAlive: 1;
+        int isMale: 1;
+        int notGeneralYet: 1;
+        int unknown7: 3;
         int age: 7;
     };
+};
+
+struct CharacterType {
+    CharacterRole id;
 };
 
 struct Character {
@@ -190,14 +215,16 @@ struct Character {
     char isVisible;    // offset 0x018
     float opacity;     // offset 0x01C   0 to 1
     int unknown2[22];
-    struct TextEntryData *name; // offset 0x078
-    int unknown3[18];
+    Person *person; // offset 0x078
+    int unknown3[2];
+    CharacterType *type;
+    int unknown4[15];
     float movementPoints; // offset 0x0C4 (read only)
-    int unknown4[7];
+    int unknown5[7];
     Army *army;           // offset 0x0E4
-    int unknown5[22];
+    int unknown6[22];
     unsigned short orientation;
-    int unknown6;
+    int unknown7;
     float maxMovementPoints; // offset 0x0148
 };
 

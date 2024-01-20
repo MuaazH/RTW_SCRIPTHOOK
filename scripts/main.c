@@ -1,5 +1,5 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2010-02-14.
-// this is the main script, it's a unique script use to loader other scripts
+// this is the main script, it's a unique script used to loader other scripts
 // it is recompiled and called everytime you start/load a campaign game
 
 #include <tccdefs.h>
@@ -7,6 +7,7 @@
 const char *active_scripts[] = {
         "scripts/sticky-fort.c",
         "scripts/tribute-fix.c",
+        "scripts/4-year-turn.c",
 //        "scripts/larger-population.c",
 //        "scripts/no-taxes.c",
 //        "scripts/demolition.c",

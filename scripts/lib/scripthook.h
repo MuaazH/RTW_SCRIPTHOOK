@@ -10,6 +10,10 @@
 #else
 #define SCRIPTHOOK_API extern
 
+#define SCRIPTHOOK_VERSION_MAJOR 2
+#define SCRIPTHOOK_VERSION_MINOR 2
+#define SCRIPTHOOK_VERSION_PATCH 0
+
 // debug functions
 extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, ...);
 
@@ -17,9 +21,6 @@ extern void rtw_log(const char *script, const char *msg);
 
 #endif
 
-#define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 1
-#define SCRIPTHOOK_VERSION_PATCH 0
 
 #define OPTION_DEFAULT 0
 #define OPTION_ALLOW 1
@@ -34,12 +35,6 @@ typedef struct UnitType UnitType;
 typedef struct SoliderUpgrades SoliderUpgrades;
 typedef struct Army Army;
 typedef struct ArmyUnit ArmyUnit;
-typedef struct ArrayList ArrayList;
-typedef struct ArmyUnitArrayList ArmyUnitArrayList;
-typedef struct RegionArrayList RegionArrayList;
-typedef struct ArmyArrayList ArmyArrayList;
-typedef struct CharacterArrayList CharacterArrayList;
-typedef struct SettlementArrayList SettlementArrayList;
 typedef struct FactionsData FactionsData;
 typedef struct Diplomacy Diplomacy;
 typedef struct GameDate GameDate;
@@ -127,41 +122,7 @@ enum {
     BUILDING_TYPE_COUNT = 64
 };
 
-struct ArrayList {
-    void **buffer;           // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
-
-struct ArmyUnitArrayList {
-    ArmyUnit **buffer;       // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
-
-struct RegionArrayList {
-    Region **buffer;         // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
-
-struct ArmyArrayList {
-    Army **buffer;           // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
-
-struct CharacterArrayList {
-    Character **buffer;      // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
-
-struct SettlementArrayList {
-    Settlement **buffer;     // A pointer to pointers
-    int capacity;            // how much is allocated
-    int size;                // how many are in the list
-};
+#define ArrayList(type) struct { type **buffer; unsigned int capacity; unsigned int size; }
 
 struct GameDate {
     int year;
@@ -182,7 +143,7 @@ struct Person {
     int management;
     int subterfuge;
     int unknown2[53];
-    ArrayList retinue;
+    ArrayList(void) retinue;
     int unknown3[23];
     GameDate birthDate;
     GameDate deathDate;
@@ -485,11 +446,11 @@ struct Army {
     int unknown0[0x15];
     Faction *faction;
     int unknown1;
-    ArmyUnitArrayList units;
+    ArrayList(ArmyUnit) units;
     int unknown3[34];
     Character *character;
     int unknown4[6];
-    ArrayList agents;
+    ArrayList(void) agents;
 };
 
 struct Treasury {
@@ -532,32 +493,33 @@ struct Faction {
     Settlement *capital;              // offset 0x00A8
     Person *pLeaderName;              // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
     Person *pHeirName;                // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct FactionInfo *info;         // offset 0x00B4
+    FactionInfo *info;                // offset 0x00B4
     int isPlayer;                     // offset 0x00B8
     int unknown2[4];
-    ArrayList unknown3;
-    int unknown4[5];
-    CharacterArrayList characters;
-    ArmyArrayList armies;
-    RegionArrayList regions;
-    SettlementArrayList settlements;
-    ArrayList forts;
-    ArrayList watchtowers;
-    ArrayList ports;
+    ArrayList(void) unknown3;
+    int unknown4[2];
+    ArrayList(Person) persons;
+    ArrayList(Character) characters;
+    ArrayList(Army) armies;
+    ArrayList(Region) regions;
+    ArrayList(Settlement) settlements;
+    ArrayList(Fort) forts;
+    ArrayList(void) watchtowers;
+    ArrayList(Seaport) ports;
     int unknown5;
-    ArrayList unknown6;
+    ArrayList(void) unknown6;
     int unknown7;
     int unknown8;
-    ArrayList unknown9;
-    ArrayList unknown10;
+    ArrayList(void) unknown9;
+    ArrayList(void) unknown10;
     int unknown11[5];
     void *fogOfWar;
-    ArrayList missions;
-    ArrayList unknown12;
+    ArrayList(void) missions;
+    ArrayList(void) unknown12;
     int unknown13[3];
-    ArrayList unknown14;
-    ArrayList unknown15;
-    ArrayList rankingHistory;
+    ArrayList(void) unknown14;
+    ArrayList(void) unknown15;
+    ArrayList(void) rankingHistory;
     int unknown16[2];
     union {
         int flags;

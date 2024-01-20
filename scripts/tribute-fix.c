@@ -3,7 +3,6 @@
 // the last turn, because the value is cleared (when the
 // turns left is less than 1) before the payment is processed
 
-// This mod is for 1.5, it does not work on 1.9 and I'm not sure if its needed anyway
 
 #include <tccdefs.h>
 #include <scripthook.h>

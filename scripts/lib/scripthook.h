@@ -18,7 +18,7 @@ extern void rtw_log(const char *script, const char *msg);
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
 #define SCRIPTHOOK_VERSION_MINOR 0
-#define SCRIPTHOOK_VERSION_PATCH 1
+#define SCRIPTHOOK_VERSION_PATCH 2
 
 #define OPTION_DEFAULT 0
 #define OPTION_ALLOW 1
@@ -62,6 +62,7 @@ typedef struct Dictionary Dictionary;
 typedef struct Seaport Seaport;
 typedef struct Person Person;
 typedef struct Fort Fort;
+typedef struct FactionInfo FactionInfo;
 typedef WCHAR **PTextEntry;
 
 static Dictionary *sharedDictionary = (Dictionary *) 0x0275E518; // 1.9
@@ -504,7 +505,7 @@ struct Faction {
     Settlement *capital;              // offset 0x00A8
     Person *pLeaderName;              // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
     Person *pHeirName;                // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    struct FactionInfo *pName;        // offset 0x00B4
+    struct FactionInfo *info;         // offset 0x00B4
     int isPlayer;                     // offset 0x00B8
     int unknown2[4];
     ArrayList unknown3;
@@ -642,7 +643,7 @@ struct FactionsData {
     Faction *factions[21]; // offset 0x168 size 0x54
     Faction *sortedFactions[21]; // offset 0x168 size 0x54
     int factionCount;
-    int unknown1[0xC6];
+    int unknown1[0xCB];
     FactionDiplomacy diplomacy[21];
 };
 

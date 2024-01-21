@@ -27,7 +27,7 @@ static PTextEntry *pDescription = 0;
  */
 void on_init() {
     pDescription = rtw_translate(stratDictionary, "SMT_TAX_LEVEL_LOW");
-    if (pDescription) {
+    if (pDescription && *pDescription) {
         rtw_update_text(pDescription, newDescription);
     }
 

@@ -5,14 +5,20 @@
 #ifndef RTW_SCRIPT_HOOK_H
 #define RTW_SCRIPT_HOOK_H
 
+#define SCRIPTHOOK_VERSION_MAJOR 2
+#define SCRIPTHOOK_VERSION_MINOR 2
+#define SCRIPTHOOK_VERSION_PATCH 1
+
+
+
+
+
+
+
 #ifdef SCRIPTHOOK_ASI
 #define SCRIPTHOOK_API __declspec(dllexport)
 #else
 #define SCRIPTHOOK_API extern
-
-#define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 2
-#define SCRIPTHOOK_VERSION_PATCH 0
 
 // debug functions
 extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, ...);
@@ -20,6 +26,8 @@ extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, 
 extern void rtw_log(const char *script, const char *msg);
 
 #endif
+
+
 
 
 #define OPTION_DEFAULT 0
@@ -156,11 +164,13 @@ struct Person {
     Person *children[4];
     int unknown6[12];
     struct {
-        int isAlive: 1;
-        int isMale: 1;
-        int notGeneralYet: 1;
-        int unknown7: 3;
-        int age: 7;
+        unsigned int isAlive: 1;
+        unsigned int isMale: 1;
+        unsigned int notGeneralYet: 1;
+        unsigned int unknown7: 1;
+        unsigned int unknown8: 1;
+        unsigned int unknown9: 1;
+        unsigned int age: 7;
     };
 };
 

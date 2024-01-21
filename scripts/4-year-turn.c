@@ -4,8 +4,47 @@
 
 #include <tccdefs.h>
 #include <scripthook.h>
+#include <str_builder.h>
 
+static const char *SCRIPT = "scripts/4-year-turn.c";
 static const int turn = 4;
+
+void on_init() {
+    char buf[128];
+    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
+
+    FactionsData *pData = rtw_get_faction_data();
+    if (!pData)
+        return;
+
+    for (int i = 0; i < pData->factionCount; ++i) {
+        Faction *pFaction = pData->sortedFactions[i];
+        if (!pFaction)
+            continue;
+        int peopleCount = pFaction->persons.size;
+
+        sb_reset(&sb);
+        sb_str(&sb, pFaction->info->name);
+        sb_str(&sb, ", ");
+        sb_i32(&sb, peopleCount);
+        rtw_log(SCRIPT, buf);
+
+        for (int j = 0; j < peopleCount; ++j) {
+            if (!pFaction->persons.buffer) {
+                rtw_log(SCRIPT, "Null buffer found");
+                continue;
+            }
+
+            Person *pPerson = pFaction->persons.buffer[j];
+                pPerson->age -= 20;
+
+            sb_reset(&sb);
+            sb_str(&sb, "    ");
+            sb_i32(&sb, pPerson->age);
+            rtw_log(SCRIPT, buf);
+        }
+    }
+}
 
 void age_people() {
     // age characters

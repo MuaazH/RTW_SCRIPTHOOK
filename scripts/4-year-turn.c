@@ -13,23 +13,23 @@ void on_init() {
     char buf[128];
     StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
 
-    FactionsData *pData = rtw_get_faction_data();
-    if (!pData)
+    Campaign *pCampaign = rtw_get_campaign();
+    if (!pCampaign)
         return;
 
-    for (int i = 0; i < pData->factionCount; ++i) {
-        Faction *pFaction = pData->sortedFactions[i];
+    for (int i = 0; i < pCampaign->factionCount; ++i) {
+        Faction *pFaction = pCampaign->sortedFactions[i];
         if (!pFaction)
             continue;
-        int peopleCount = pFaction->persons.size;
+        unsigned int peopleCount = pFaction->persons.size;
 
         sb_reset(&sb);
         sb_str(&sb, pFaction->info->name);
         sb_str(&sb, ", ");
-        sb_i32(&sb, peopleCount);
+        sb_u32(&sb, peopleCount);
         rtw_log(SCRIPT, buf);
 
-        for (int j = 0; j < peopleCount; ++j) {
+        for (unsigned int j = 0; j < peopleCount; ++j) {
             if (!pFaction->persons.buffer) {
                 rtw_log(SCRIPT, "Null buffer found");
                 continue;
@@ -48,11 +48,11 @@ void on_init() {
 
 void age_people() {
     // age characters
-    FactionsData *pData = rtw_get_faction_data();
+    Campaign *pData = rtw_get_campaign();
     for (int i = 0; i < pData->factionCount; ++i) {
         Faction *pFaction = pData->sortedFactions[i];
-        int count = pFaction->persons.size;
-        for (int j = 0; j < count; ++j) {
+        unsigned int count = pFaction->persons.size;
+        for (unsigned int j = 0; j < count; ++j) {
             Person *pPerson = pFaction->persons.buffer[j];
             if (pPerson->isAlive)
                 pPerson->age += turn;
@@ -60,9 +60,9 @@ void age_people() {
     }
 }
 
-void on_end_of_turn(GameDate *date) {
+void on_end_of_turn() {
     // move time forward
-    date->year += turn;
+    rtw_get_campaign()->currentDate.year += turn;
     age_people();
 }
 

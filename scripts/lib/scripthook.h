@@ -6,8 +6,8 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 2
-#define SCRIPTHOOK_VERSION_PATCH 2
+#define SCRIPTHOOK_VERSION_MINOR 3
+#define SCRIPTHOOK_VERSION_PATCH 0
 
 
 
@@ -43,7 +43,7 @@ typedef struct UnitType UnitType;
 typedef struct SoliderUpgrades SoliderUpgrades;
 typedef struct Army Army;
 typedef struct ArmyUnit ArmyUnit;
-typedef struct FactionsData FactionsData;
+typedef struct Campaign Campaign;
 typedef struct Diplomacy Diplomacy;
 typedef struct GameDate GameDate;
 typedef struct Faction Faction;
@@ -637,13 +637,17 @@ struct Diplomacy {
 
 typedef Diplomacy FactionDiplomacy[21];
 
-struct FactionsData {
+struct Campaign {
     int unknown0[0x5A]; // offset 0 size 0x168
     Faction *factions[21]; // offset 0x168 size 0x54
     Faction *sortedFactions[21]; // offset 0x168 size 0x54
     int factionCount;
-    int unknown1[0xCB];
-    FactionDiplomacy diplomacy[21];
+    int unknown1[57];
+    GameDate currentDate; // offset 0x2F8 = 760
+    GameDate startDate;
+    GameDate endDate;
+    int unknown2[140];
+    FactionDiplomacy diplomacy[21]; // offset 0x540 = 1344
 };
 
 struct CultureCityModel { // size should be 180 = 0x6C
@@ -796,11 +800,11 @@ SCRIPTHOOK_API int rtw_write_mem(void *address, const char *hex);
 SCRIPTHOOK_API int rtw_update_mem(void *address, const char *oldHex, const char *hex);
 
 /**
- * Returns a pointer to faction data bullshit
- * @return pointer to FactionData
- * @see FactionData
+ * Returns a pointer to campaign data
+ * @return pointer to Campaign
+ * @see Campaign
  */
-SCRIPTHOOK_API FactionsData *rtw_get_faction_data(void);
+SCRIPTHOOK_API Campaign *rtw_get_campaign(void);
 
 /**
  * gets faction pointer from it's id

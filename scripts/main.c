@@ -8,21 +8,9 @@ const char *active_scripts[] = {
         "scripts/sticky-fort.c",
         "scripts/tribute-fix.c",
 //        "scripts/4-year-turn.c",
-        "scripts/larger-population.c",
+//        "scripts/larger-population.c",
         "scripts/no-taxes.c",
         "scripts/demolition.c",
-//        "scripts/diplomacy-dbg.c",
-//        "scripts/damaged-buildings.c"
-//        "scripts/gaza.c"
-//        "scripts/total-piss.c",
-//        "scripts/war-on-trespassing.c",
-//        "scripts/debts.c",
-//        "scripts/blockade.c",
-//        "scripts/demolition.c",
-//        "scripts/building-maintenance.c",
-//        "scripts/one-sided-love.c",
-//        "scripts/city-stats.c",
-//        "scripts/dbg-building-types.c",
 
 
 

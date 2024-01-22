@@ -38,6 +38,6 @@ void on_init() {
 /**
  * Called from scripthook.asi
  */
-void on_end_of_turn(GameDate *date) {
+void on_end_of_turn() {
     loveJulii();
 }

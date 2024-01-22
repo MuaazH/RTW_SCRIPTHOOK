@@ -5,7 +5,6 @@
 
 #include <tccdefs.h>
 #include <scripthook.h>
-//#include <str_builder.h>
 
 const char *SCRIPT = "scripts/larger-population.c";
 const int multiplier = 4;

@@ -43,7 +43,7 @@ struct Script {
     /**
      * called at the end of each turn
      */
-    void (*on_end_of_turn)(GameDate *);
+    void (*on_end_of_turn)();
 
     /**
      * called after a city updates it's population stats

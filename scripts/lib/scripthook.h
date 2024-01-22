@@ -187,9 +187,9 @@ struct Character {
     float opacity;     // offset 0x01C   0 to 1
     int unknown2[22];
     Person *person; // offset 0x078
-    int unknown3[2];
+    Faction *faction;
     CharacterType *type;
-    int unknown4[15];
+    int unknown4[16];
     float movementPoints; // offset 0x0C4 (read only)
     int unknown5[7];
     Army *army;           // offset 0x0E4

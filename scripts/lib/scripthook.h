@@ -6,13 +6,8 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 3
+#define SCRIPTHOOK_VERSION_MINOR 4
 #define SCRIPTHOOK_VERSION_PATCH 0
-
-
-
-
-
 
 
 #ifdef SCRIPTHOOK_ASI
@@ -26,8 +21,6 @@ extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, 
 extern void rtw_log(const char *script, const char *msg);
 
 #endif
-
-
 
 
 #define OPTION_DEFAULT 0
@@ -96,17 +89,19 @@ enum {
 
 typedef int Season;
 
-static const Season WINTER = 0;
-static const Season SUMMER = 2;
+enum {
+    WINTER = 0,
+    SUMMER = 2
+};
 
-typedef int CharacterRole;
-
-static const CharacterRole SPY = 0;
-static const CharacterRole ASSASSIN = 1;
-static const CharacterRole DIPLOMAT = 2;
-static const CharacterRole ADMIRAL = 3;
-static const CharacterRole CAPTAIN = 4;
-static const CharacterRole FAMILY_MEMBER = 5;
+enum {
+    ROLE_SPY = 0,
+    ROLE_ASSASSIN,
+    ROLE_DIPLOMAT,
+    ROLE_ADMIRAL,
+    ROLE_CAPTAIN,
+    ROLE_FAMILY_MEMBER
+};
 
 enum {
     CULTURE_ROMAN = 0,
@@ -130,6 +125,16 @@ enum {
     BUILDING_TYPE_COUNT = 64
 };
 
+enum {
+    DEATH_CAUSE_NATURAL = 1,
+    DEATH_CAUSE_TRAGIC = 2,
+    DEATH_CAUSE_BATTLE = 3,
+    DEATH_CAUSE_ASSASSINATION = 4,
+    DEATH_CAUSE_EXECUTION = 5,
+    DEATH_CAUSE_PLAGUE = 7,
+    DEATH_CAUSE_DESERTED = 12,
+};
+
 #define ArrayList(type) struct { type **buffer; unsigned int capacity; unsigned int size; }
 
 struct GameDate {
@@ -150,32 +155,42 @@ struct Person {
     int influence;
     int management;
     int subterfuge;
-    int unknown2[53];
+    int unknown2[25];
+    int health; // health men have more children & live longer?
+    int unknown3[27];
     ArrayList(void) retinue;
-    int unknown3[23];
+    int unknown4[20];
+    Character *character;
+    int unknown5[2];
     GameDate birthDate;
     GameDate deathDate;
     int childrenCount;
     Faction *faction;
-    int unknown4;
-    int unknown5;
+    int unknown6;
+    int unknown7;
     Person *father;
     Person *spouse;
     Person *children[4];
-    int unknown6[12];
+    int unknown8[4];
+    int causeOfDeath;
+    void *portrait;
+    int unknown9;
+    void *largePortrait;
+    int unknown10;
+    int unknown12[3];
     struct {
         unsigned int isAlive: 1;
         unsigned int isMale: 1;
         unsigned int notGeneralYet: 1;
-        unsigned int unknown7: 1;
-        unsigned int unknown8: 1;
-        unsigned int unknown9: 1;
+        unsigned int unknownFlag1: 1;
+        unsigned int unknownFlag2: 1;
+        unsigned int unknownFlag3: 1;
         unsigned int age: 7;
     };
 };
 
 struct CharacterType {
-    CharacterRole id;
+    int role;
 };
 
 struct Character {
@@ -927,5 +942,41 @@ SCRIPTHOOK_API void rtw_building_destroy(Building *building);
  * @return null if the id is not valid
  */
 SCRIPTHOOK_API Region *rtw_get_region(int id);
+
+/**
+ * Ages a person by one year, the limit is 126 to avoid errors. If
+ * the person has a character and they reaches this age they will be
+ * killed with natural causes
+ * @param person the person to age
+ * @param years number of years to age the person
+ */
+SCRIPTHOOK_API void rtw_person_age(Person *person, int years);
+
+/**
+ * Kills a character, don't forget to set the cause of death to character->person
+ * @param character the character to kill
+ */
+SCRIPTHOOK_API void rtw_character_die(Character *character);
+
+/**
+ * Enables men to get married the moment they are of age
+ * Most useful if you have multiple years per turn
+ * @param enabled non-zero to enable, zero to disable
+ */
+SCRIPTHOOK_API void rtw_set_instant_marriage(int enabled);
+
+/**
+ * Returns a multiplier that controls how likely children
+ * are to be born. Default is 1.0f
+ * @return the multiplier value
+ */
+SCRIPTHOOK_API float rtw_get_fertility_multiplier();
+
+/**
+ * Sets a multiplier that controls how likely children
+ * are to be born. Default is 1.0f
+ * @param value the multiplier value, must be greater that zero
+ */
+SCRIPTHOOK_API void rtw_set_fertility_multiplier(float value);
 
 #endif // RTW_SCRIPT_HOOK_H

@@ -1,68 +1,44 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2018-01-06.
-// This scripts adds 4 more years to each turn
+// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-18.
+// This scripts adds 4 more years to each yearsInTurn
 // Requested by: Sarmatian Smilodon
 
 #include <tccdefs.h>
 #include <scripthook.h>
-#include <str_builder.h>
+//#include <str_builder.h>
 
-static const char *SCRIPT = "scripts/4-year-turn.c";
-static const int turn = 4;
-
-void on_init() {
-    char buf[128];
-    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
-
-    Campaign *pCampaign = rtw_get_campaign();
-    if (!pCampaign)
-        return;
-
-    for (int i = 0; i < pCampaign->factionCount; ++i) {
-        Faction *pFaction = pCampaign->sortedFactions[i];
-        if (!pFaction)
-            continue;
-        unsigned int peopleCount = pFaction->persons.size;
-
-        sb_reset(&sb);
-        sb_str(&sb, pFaction->info->name);
-        sb_str(&sb, ", ");
-        sb_u32(&sb, peopleCount);
-        rtw_log(SCRIPT, buf);
-
-        for (unsigned int j = 0; j < peopleCount; ++j) {
-            if (!pFaction->persons.buffer) {
-                rtw_log(SCRIPT, "Null buffer found");
-                continue;
-            }
-
-            Person *pPerson = pFaction->persons.buffer[j];
-                pPerson->age -= 20;
-
-            sb_reset(&sb);
-            sb_str(&sb, "    ");
-            sb_i32(&sb, pPerson->age);
-            rtw_log(SCRIPT, buf);
-        }
-    }
-}
+//static const char *SCRIPT = "scripts/4-year-yearsInTurn.c";
+static const int yearsInTurn = 4;
 
 void age_people() {
     // age characters
     Campaign *pData = rtw_get_campaign();
-    for (int i = 0; i < pData->factionCount; ++i) {
+    for (int i = 0; i < pData->factionCount; ++i) { // all factions
         Faction *pFaction = pData->sortedFactions[i];
-        unsigned int count = pFaction->persons.size;
-        for (unsigned int j = 0; j < count; ++j) {
+        // pFaction->persons.size can change on births
+        for (unsigned int j = 0; j < pFaction->persons.size; ++j) { // all people
             Person *pPerson = pFaction->persons.buffer[j];
+            if (pPerson->health < 1)
+                pPerson->health = 10; // this should make this man have more children, not sure about women tho
             if (pPerson->isAlive)
-                pPerson->age += turn;
+                rtw_person_age(pPerson, yearsInTurn);
         }
     }
 }
 
-void on_end_of_turn() {
-    // move time forward
-    rtw_get_campaign()->currentDate.year += turn;
-    age_people();
+// Hooks
+
+void on_init() {
+    rtw_set_instant_marriage(1);
+    rtw_set_fertility_multiplier(4.0f);
 }
 
+void on_destroy() {
+    rtw_set_fertility_multiplier(1.0f); // restore default value
+}
+
+void on_end_of_turn() {
+    // move time forward
+    rtw_get_campaign()->currentDate.year += yearsInTurn;
+    // age clowns
+    age_people();
+}

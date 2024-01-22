@@ -1,6 +1,6 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2016-02-14.
 // This script is an epic prank that disbands all units for every one at
-// the end of each the turn, turning the game into total peace instead of total war
+// the end of each the yearsInTurn, turning the game into total peace instead of total war
 // Generals will be left alone to manage the cities, but also because i don't know
 // what will the game do if you disband a general unit, i never tested it.
 

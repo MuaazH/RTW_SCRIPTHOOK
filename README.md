@@ -1,4 +1,4 @@
-# Rome total war 1.9 scripthook (Version 2.2.2)
+# Rome total war 1.9 scripthook (Version 2.3.0)
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
 

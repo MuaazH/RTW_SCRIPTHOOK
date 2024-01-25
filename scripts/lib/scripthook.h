@@ -6,7 +6,7 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 4
+#define SCRIPTHOOK_VERSION_MINOR 5
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -148,7 +148,7 @@ struct FactionInfo {
 };
 
 struct Person {
-    int unknown0;
+    int id;
     PTextEntry *name;
     int unknown1[9];
     int command;
@@ -166,7 +166,7 @@ struct Person {
     GameDate deathDate;
     int childrenCount;
     Faction *faction;
-    int unknown6;
+    int factionID; // id of faction he was born into?
     int unknown7;
     Person *father;
     Person *spouse;
@@ -944,13 +944,12 @@ SCRIPTHOOK_API void rtw_building_destroy(Building *building);
 SCRIPTHOOK_API Region *rtw_get_region(int id);
 
 /**
- * Ages a person by one year, the limit is 126 to avoid errors. If
- * the person has a character and they reaches this age they will be
- * killed with natural causes
+ * Processes (marriage & having children) a person and ages them if the season
+ * is right. To avoid errors, the age limit is 126. If the person has a character
+ * and they reaches this age they will be killed with natural causes
  * @param person the person to age
- * @param years number of years to age the person
  */
-SCRIPTHOOK_API void rtw_person_age(Person *person, int years);
+SCRIPTHOOK_API void rtw_person_age(Person *person);
 
 /**
  * Kills a character, don't forget to set the cause of death to character->person
@@ -978,5 +977,14 @@ SCRIPTHOOK_API float rtw_get_fertility_multiplier();
  * @param value the multiplier value, must be greater that zero
  */
 SCRIPTHOOK_API void rtw_set_fertility_multiplier(float value);
+
+/**
+ * Advances time to the next season. This only affects the
+ * year & date, nothing is affected by this time change
+ * (i.e. people don't age, queue are not processed, ...etc)
+ * @param date the date to change
+ */
+SCRIPTHOOK_API void rtw_date_next_season(GameDate *date);
+
 
 #endif // RTW_SCRIPT_HOOK_H

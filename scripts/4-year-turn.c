@@ -7,7 +7,8 @@
 //#include <str_builder.h>
 
 //static const char *SCRIPT = "scripts/4-year-yearsInTurn.c";
-static const int yearsInTurn = 4;
+static const int years_in_turn = 4;
+static const int seasons_in_year = 2;
 
 void age_people() {
     // age characters
@@ -20,25 +21,23 @@ void age_people() {
             if (pPerson->health < 1)
                 pPerson->health = 10; // this should make this man have more children, not sure about women tho
             if (pPerson->isAlive)
-                rtw_person_age(pPerson, yearsInTurn);
+                rtw_person_age(pPerson);
         }
     }
 }
 
 // Hooks
 
-void on_init() {
-    rtw_set_instant_marriage(1);
-    rtw_set_fertility_multiplier(4.0f);
-}
-
-void on_destroy() {
-    rtw_set_fertility_multiplier(1.0f); // restore default value
-}
-
 void on_end_of_turn() {
-    // move time forward
-    rtw_get_campaign()->currentDate.year += yearsInTurn;
-    // age clowns
-    age_people();
+    Campaign *campaign = rtw_get_campaign();
+    const int moves = years_in_turn * seasons_in_year;
+    GameDate *date = &campaign->currentDate;
+    int currentYear = date->year;
+
+    for (int i = 0; i < moves; ++i) {
+        // move time forward
+        rtw_date_next_season(date);
+        if (currentYear != date->year)
+            age_people();
+    }
 }

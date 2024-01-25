@@ -985,4 +985,84 @@ SCRIPTHOOK_API void rtw_set_fertility_multiplier(float value);
 SCRIPTHOOK_API void rtw_date_next_season(GameDate *date);
 
 
+
+// ===========================================
+// END OF GAME RELATED CRAP
+// ===========================================
+
+#define DECLARE_SCRIPT static Script script;
+
+typedef struct Script Script;
+
+struct Script {
+    /**
+     * called when a game is started/loaded
+     */
+    void (*on_init)();
+
+    /**
+     * called when a game is closed
+     */
+    void (*on_destroy)();
+
+    /**
+     * called at the end of each turn
+     */
+    void (*on_end_of_turn)();
+
+    /**
+     * called after a city updates it's population stats
+     */
+    void (*on_city_population_stats)(CityStats *);
+
+    /**
+     * called before a city increases it's population count
+     * @return returns non-zero to block native function from being called
+     */
+    int (*on_city_population_growth)(CityStats *);
+
+    /**
+     * called after a city updates it's order stats
+     */
+    void (*on_city_order_stats)(CityStats *);
+
+    /**
+     * called after a city updates it's income stats
+     */
+    void (*on_city_income_stats)(CityStats *);
+
+    /**
+     * called to check whether a building can be demolished
+     * @return OPTION_DEFAULT for default game behavior, OPTION_ALLOW to allow demolition, OPTION_PREVENT to forbid demolition
+     */
+    int (*on_demolition_check)(Building *);
+
+    /**
+     * called to check whether an abandoned fort can despawn or not
+     * @return OPTION_DEFAULT for default game behavior, OPTION_PREVENT to keep the abandoned fort
+     */
+    int (*on_fort_despawn)(Fort *);
+
+    /**
+     * called to check whether a general should get married this turn
+     * @param general the general
+     * @return OPTION_DEFAULT for default game behavior, OPTION_ALLOW to force marriage, OPTION_PREVENT to prevent marriage
+     */
+    int (*on_marriage_coin_flip)(Character *general);
+
+    /**
+     * called to choose the gender of the baby born to a general
+     * @param father the father
+     * @return OPTION_DEFAULT for default game behavior of randomness, OPTION_BOY for boy OPTION_GIRL for girl
+     */
+    int (*on_baby_gender_coin_flip)(Character *father);
+
+    /**
+     * called to after a building has been demolished
+     */
+    void (*on_demolition)(Settlement *, Building *);
+};
+
+#define EXPORT_HOOK(x) script-> x = x;
+
 #endif // RTW_SCRIPT_HOOK_H

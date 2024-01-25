@@ -39,3 +39,7 @@ void on_end_of_turn() {
             age_people();
     }
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_end_of_turn);
+}

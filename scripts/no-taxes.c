@@ -67,3 +67,10 @@ void on_city_order_stats(CityStats *pStats) {
     pStats->order.positive.taxes = positive_only(effect);
     pStats->order.negative.taxes = positive_only(-effect);
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_city_order_stats);
+    EXPORT_HOOK(on_city_population_stats);
+    EXPORT_HOOK(on_destroy);
+    EXPORT_HOOK(on_init);
+}

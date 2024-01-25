@@ -40,3 +40,8 @@ void on_demolition(Settlement *settlement, Building *building) {
     sb_str(&sb, settlement->name);
     rtw_log(SCRIPT, buf);
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_demolition);
+}
+

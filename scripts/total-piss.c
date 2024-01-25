@@ -34,3 +34,7 @@ void on_end_of_turn() {
     for (int i = 0; i < pCampaign->factionCount; ++i)
         disband_faction_armies(pCampaign->factions[i]);
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_end_of_turn);
+}

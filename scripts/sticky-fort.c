@@ -8,3 +8,7 @@
 int on_fort_despawn(Fort *fort) {
 	return OPTION_PREVENT; //
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_fort_despawn);
+}

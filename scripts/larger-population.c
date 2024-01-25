@@ -134,3 +134,12 @@ int on_city_population_growth(CityStats *pStats) {
 
     return 1; // non-zero means don't call the native growth function
 }
+
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_init);
+    EXPORT_HOOK(on_destroy);
+    EXPORT_HOOK(on_city_population_growth);
+    EXPORT_HOOK(on_city_order_stats);
+    EXPORT_HOOK(on_city_population_stats);
+}

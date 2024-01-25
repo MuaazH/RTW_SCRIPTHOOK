@@ -24,3 +24,6 @@ void on_end_of_turn() {
     }
 }
 
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_end_of_turn);
+}

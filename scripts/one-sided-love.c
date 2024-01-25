@@ -41,3 +41,8 @@ void on_init() {
 void on_end_of_turn() {
     loveJulii();
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_end_of_turn);
+    EXPORT_HOOK(on_init);
+}

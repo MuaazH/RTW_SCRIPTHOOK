@@ -11,3 +11,8 @@ void on_init() {
 void on_destroy() {
     rtw_set_fertility_multiplier(1.0f);
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_destroy);
+    EXPORT_HOOK(on_init);
+}

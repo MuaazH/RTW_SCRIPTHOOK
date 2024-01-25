@@ -9,3 +9,7 @@
 int on_baby_gender_coin_flip(Character *father) {
     return OPTION_BOY;
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_baby_gender_coin_flip);
+}

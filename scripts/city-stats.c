@@ -18,3 +18,8 @@ void on_city_order_stats(CityStats *pStats) {
 void on_city_income_stats(CityStats *pStats) {
     pStats->spending.devastation <<= 1; // times 2
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_city_order_stats);
+    EXPORT_HOOK(on_city_income_stats);
+}

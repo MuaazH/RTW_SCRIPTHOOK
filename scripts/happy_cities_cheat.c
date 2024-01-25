@@ -21,3 +21,8 @@ void on_city_order_stats(CityStats *pStats) {
     pStats->order.negative.blockaded = 0;
     pStats->order.negative.besieged = 0;
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_city_order_stats);
+    EXPORT_HOOK(on_city_population_stats);
+}

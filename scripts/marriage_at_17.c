@@ -9,3 +9,7 @@ int on_marriage_coin_flip(Character *character) {
         ? OPTION_ALLOW
         : OPTION_PREVENT;
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_marriage_coin_flip);
+}

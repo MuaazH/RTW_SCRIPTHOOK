@@ -43,3 +43,9 @@ void on_destroy() {
 void on_end_of_turn() {
     check_tribute();
 }
+
+void init_hooks(Script *script) {
+    EXPORT_HOOK(on_init);
+    EXPORT_HOOK(on_destroy);
+    EXPORT_HOOK(on_end_of_turn);
+}

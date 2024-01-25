@@ -9,7 +9,7 @@
 Good people don't kill that many, only psychopaths do
 </div>
 
-# Rome total war 1.9 scripthook (Version 2.8.0)
+# Rome total war 1.9 scripthook (Version 2.8.1)
 
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
@@ -46,7 +46,7 @@ if you get a missing dll error, install VC++2013 form Microsoft
 1. Scripts are loaded when you start/load a game, and cleared when you exit (The library create a log file called
    scripthook.log when started)
 2. Scripts can be activated or disabled from this file: [main.c](scripts/main.c)
-3. Your scripts must implement the hooks from Script structure at the end of [scripthook.h](scripts/lib/scripthook.h)
+3. Your scripts must implement the hooks from the ```Script``` structure at the end of [scripthook.h](scripts/lib/scripthook.h)
 3. See [scripthook.h](scripts/lib/scripthook.h) for API you can call
 4. If you create a mod, let me know. I like new ideas (Email in my profile)
 5. If you make a youtube video, make it funny and email me a link

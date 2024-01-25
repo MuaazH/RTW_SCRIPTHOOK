@@ -10,7 +10,7 @@ const char *SCRIPT = "scripts/larger-population.c";
 const int multiplier = 4;
 
 float random() {
-    return (float) (rtw_random() & 0xFFFF) / 65535.0f;
+    return (float) (rtw_rand_s() & 0xFFFF) / 65535.0f;
 }
 
 int population_growth_total(CityStats *pStats) {

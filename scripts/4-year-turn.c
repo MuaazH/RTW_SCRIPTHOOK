@@ -18,8 +18,6 @@ void age_people() {
         // pFaction->persons.size can change on births
         for (unsigned int j = 0; j < pFaction->persons.size; ++j) { // all people
             Person *pPerson = pFaction->persons.buffer[j];
-            if (pPerson->health < 1)
-                pPerson->health = 10; // this should make this man have more children, not sure about women tho
             if (pPerson->isAlive)
                 rtw_person_age(pPerson);
         }

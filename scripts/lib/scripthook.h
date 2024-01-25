@@ -6,7 +6,7 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 5
+#define SCRIPTHOOK_VERSION_MINOR 6
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -26,6 +26,11 @@ extern void rtw_log(const char *script, const char *msg);
 #define OPTION_DEFAULT 0
 #define OPTION_ALLOW 1
 #define OPTION_PREVENT 2
+
+#define OPTION_BOY 1
+#define OPTION_GIRL 2
+
+
 
 typedef unsigned short WCHAR;
 typedef struct Character Character;
@@ -854,7 +859,7 @@ SCRIPTHOOK_API void rtw_army_unit_disband(ArmyUnit *unit);
  * Generates a secure random int using rand_s
  * @return a random int
  */
-SCRIPTHOOK_API int rtw_random();
+SCRIPTHOOK_API int rtw_rand_s();
 
 /**
  * Returns the global tax multiplier used in calculating taxes
@@ -956,13 +961,6 @@ SCRIPTHOOK_API void rtw_person_age(Person *person);
  * @param character the character to kill
  */
 SCRIPTHOOK_API void rtw_character_die(Character *character);
-
-/**
- * Enables men to get married the moment they are of age
- * Most useful if you have multiple years per turn
- * @param enabled non-zero to enable, zero to disable
- */
-SCRIPTHOOK_API void rtw_set_instant_marriage(int enabled);
 
 /**
  * Returns a multiplier that controls how likely children

@@ -41,6 +41,7 @@ void on_demolition(Settlement *settlement, Building *building) {
 }
 
 void init_hooks(Script *script) {
+    EXPORT_HOOK(on_demolition_check);
     EXPORT_HOOK(on_demolition);
 }
 

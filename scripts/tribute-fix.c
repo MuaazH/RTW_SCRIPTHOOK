@@ -4,7 +4,6 @@
 // turns left is less than 1) before the payment is processed
 
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 // Shit used for logging

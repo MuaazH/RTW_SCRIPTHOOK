@@ -6,13 +6,14 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 8
-#define SCRIPTHOOK_VERSION_PATCH 2
+#define SCRIPTHOOK_VERSION_MINOR 9
+#define SCRIPTHOOK_VERSION_PATCH 0
 
 
 #ifdef SCRIPTHOOK_ASI
 #define SCRIPTHOOK_API __declspec(dllexport)
 #else
+#include <tccdefs.h>
 #define SCRIPTHOOK_API extern
 
 // debug functions
@@ -1061,6 +1062,13 @@ struct Script {
      * called to after a building has been demolished
      */
     void (*on_demolition)(Settlement *, Building *);
+
+    /**
+     * called when a character is over 60 and is flipping
+     * a coin to die
+     * @return OPTION_DEFAULT for default game behavior, OR OPTION_PREVENT OR OPTION_ALLOW
+     */
+    int (*on_character_death_check)(Character *);
 };
 
 #define EXPORT_HOOK(x) script-> x = x;

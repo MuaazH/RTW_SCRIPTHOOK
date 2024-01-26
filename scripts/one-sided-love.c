@@ -3,7 +3,6 @@
 // One sided love from the gauls to the julii
 // This love will be reset every end of yearsInTurn to full allied status
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 static int julii = -1;

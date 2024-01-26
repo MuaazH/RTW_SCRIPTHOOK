@@ -2,7 +2,6 @@
 // This mod enables demolition for all buildings (except roads & mines)
 // Maybe I'll add mines later when I've figured out how to fix the visuals
 
-#include <tccdefs.h>
 #include <scripthook.h>
 #include <str_builder.h>
 

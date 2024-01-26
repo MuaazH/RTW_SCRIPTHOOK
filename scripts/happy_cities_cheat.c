@@ -1,7 +1,6 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-22.
 // This script is a cheat for testing purposes
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 void on_city_population_stats(CityStats *pStats) {

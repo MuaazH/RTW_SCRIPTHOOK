@@ -4,7 +4,6 @@
 // Generals will be left alone to manage the cities, but also because i don't know
 // what will the game do if you disband a general unit, i never tested it.
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 void disband_faction_armies(Faction *pFaction) {

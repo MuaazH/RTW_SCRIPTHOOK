@@ -3,7 +3,6 @@
 // This allows you to keep power within your family
 // And also allows you to keep the clan name (last name) alive
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 int on_baby_gender_coin_flip(Character *father) {

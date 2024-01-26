@@ -3,7 +3,7 @@
 // This should make the game a bit slower since you can't
 // grow a small town to huge city in five years
 
-#include <tccdefs.h>
+
 #include <scripthook.h>
 
 const char *SCRIPT = "scripts/larger-population.c";

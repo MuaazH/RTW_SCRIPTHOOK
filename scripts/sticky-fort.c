@@ -2,7 +2,6 @@
 // This script prevents fort despawn
 // Requested by: Solon de Atenas
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 int on_fort_despawn(Fort *fort) {

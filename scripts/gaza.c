@@ -1,7 +1,6 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2023-10-07.
 // This mod does to the world what jews do to Gaza
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 /**

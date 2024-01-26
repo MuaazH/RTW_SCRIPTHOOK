@@ -2,7 +2,6 @@
 // This scripts adds 4 more years to each yearsInTurn
 // Requested by: Sarmatian Smilodon
 
-#include <tccdefs.h>
 #include <scripthook.h>
 //#include <str_builder.h>
 

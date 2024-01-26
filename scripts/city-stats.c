@@ -1,7 +1,6 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2018-01-06.
 // This mod changes a few city stats
 
-#include <tccdefs.h>
 #include <scripthook.h>
 
 //void on_city_population_stats(CityStats *pStats) {

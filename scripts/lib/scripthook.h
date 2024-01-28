@@ -6,7 +6,7 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 10
+#define SCRIPTHOOK_VERSION_MINOR 11
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -1001,7 +1001,11 @@ SCRIPTHOOK_API void rtw_set_fertility_multiplier(float value);
  */
 SCRIPTHOOK_API void rtw_date_next_season(GameDate *date);
 
-
+/**
+ * Updates upgrades cache the weapons, armor, and xp for this unit
+ * @param unit the unit to update
+ */
+void rtw_unit_update_upgrades_cache(ArmyUnit *unit);
 
 // ===========================================
 // END OF GAME RELATED CRAP

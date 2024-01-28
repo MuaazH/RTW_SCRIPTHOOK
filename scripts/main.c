@@ -15,6 +15,7 @@ const char *active_scripts[] = {
         "scripts/marriage_at_17.c",
         "scripts/boys_only.c",
         "scripts/long_life.c",
+        "scripts/golden_weapons.c",
 //        "scripts/rabbits.c",
 
 

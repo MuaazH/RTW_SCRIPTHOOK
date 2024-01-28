@@ -42,6 +42,9 @@ void on_init() {
         p->nextLevel *= multiplier;
         p->levelMin *= multiplier;
     }
+    PopulationLimits *lvl0 = rtw_get_population_limits(0);
+    lvl0->levelMin = 400;
+    lvl0->absoluteMinimum = 400;
 }
 
 void on_destroy() {
@@ -121,7 +124,7 @@ int on_city_population_growth(CityStats *pStats) {
     int percentage = population_growth_total(pStats) - population_decline_total(pStats);
 
     // Cap max grow rate at 6%, as it is insane to have more than 6% grow rate
-    int cappedPercentage = percentage > 12? 12 : percentage;
+    int cappedPercentage = percentage > 12 ? 12 : percentage;
     int delta = (pStats->population.count * cappedPercentage) / 200;
 
     int guaranteed = (int) ((float) delta * 0.2f); // guarantee 20% of the change

@@ -6,7 +6,7 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 9
+#define SCRIPTHOOK_VERSION_MINOR 10
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -825,6 +825,16 @@ SCRIPTHOOK_API int rtw_write_mem(void *address, const char *hex);
  * @return non-zero on success, 0 if the oldHex is the the actual value before updating
  */
 SCRIPTHOOK_API int rtw_update_mem(void *address, const char *oldHex, const char *hex);
+
+/**
+ * Updates memory after checking its value to avoid conflicts and errors
+ * @param address address of the first byte
+ * @param old the current unsigned int value
+ * @param newValue the new unsigned int value
+ * @return non-zero on success, 0 if the old value does not match actual memory
+ */
+SCRIPTHOOK_API int rtw_update_mem_u32(unsigned int *address, unsigned int old, unsigned int newValue);
+
 
 /**
  * Returns a pointer to campaign data

@@ -1,9 +1,9 @@
 <div style="text-align: center;">
     <img src="scripts/lib/APES.png" alt="NAZI JEWS">
 
-   25,490 CIVILIANS KILLED<br>
+   26,751 CIVILIANS KILLED<br>
    12,000 CHILDREN KILLED<br>
-   64,935 INSURED CIVILIANS<br>
+   65,636 INSURED CIVILIANS<br>
 </div>
 <div style="text-align: center; font-size: 200%">
 Good people don't kill that many, only psychopaths do

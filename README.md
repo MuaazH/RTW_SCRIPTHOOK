@@ -4,7 +4,7 @@
    33,360 CIVILIANS KILLED<br>
    13,022 CHILDREN KILLED<br>
    69,337 INSURED CIVILIANS<br>
-   2,000,000 HOMLESS PEOPLE<br>
+   2,000,000 HOMELESS PEOPLE<br>
 </div>
 <div style="text-align: center; font-size: 200%">
 Good people don't kill that many, only psychopaths do

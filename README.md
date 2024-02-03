@@ -10,7 +10,7 @@
 Good people don't kill that many, only psychopaths do
 </div>
 
-# Rome total war 1.9 scripthook (Version 2.13.0)
+# Rome total war 1.9 scripthook (Version 2.14.0)
 
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.

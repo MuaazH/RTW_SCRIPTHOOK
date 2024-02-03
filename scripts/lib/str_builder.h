@@ -1,5 +1,5 @@
 //
-// Created by MUAAZ on 2024-01-11.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2024-01-11.
 //
 
 #ifndef C_STR_BUILDER_H
@@ -74,5 +74,12 @@ void sb_i64(StrBuilder *sb, long long int val);
  * @param val
  */
 void sb_u64(StrBuilder *sb, unsigned long long int val);
+
+/**
+ * appends a pointer
+ * @param sb
+ * @param ptr
+ */
+void sb_ptr(StrBuilder *sb, void *ptr);
 
 #endif // C_STR_BUILDER_H

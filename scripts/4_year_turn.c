@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-18.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2024-01-18.
 // This scripts adds 4 more years to each turn
 // Requested by: Sarmatian Smilodon
 

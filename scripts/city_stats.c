@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2018-01-06.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2018-01-06.
 // This mod changes a few city stats for the worst
 
 #include <scripthook.h>

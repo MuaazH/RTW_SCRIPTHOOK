@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2016-02-14.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2016-02-14.
 // This mod converts "Low tax Rate" into "No tax"
 
 #include <scripthook.h>

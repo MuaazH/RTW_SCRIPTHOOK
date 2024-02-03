@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2023-10-07 (A happy day)
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2023-10-07 (A happy day)
 // This mod enables demolition for all buildings (except roads & mines)
 // Maybe I'll add mines later when I've figured out how to fix the visuals
 

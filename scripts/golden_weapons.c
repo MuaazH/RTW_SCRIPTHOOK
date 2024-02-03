@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2016-02-14.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2016-02-14.
 // This script gives all units full upgrades at the end of turn
 
 #include <scripthook.h>

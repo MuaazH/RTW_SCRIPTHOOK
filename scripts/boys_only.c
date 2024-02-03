@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-25.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2024-01-25.
 // This mod makes generals give birth to boys only
 // This allows you to keep power within your family
 // And also allows you to keep the clan name (last name) alive

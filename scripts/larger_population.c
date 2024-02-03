@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2016-02-14.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2016-02-14.
 // This mod makes cities x4 times larger in population
 // This should make the game a bit slower since you can't grow a small town to huge city in five years
 

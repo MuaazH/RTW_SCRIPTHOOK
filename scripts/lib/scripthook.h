@@ -1,12 +1,12 @@
 //
-// Created by MUAAZ on 2014-12-30.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2014-12-30.
 //
 
 #ifndef RTW_SCRIPT_HOOK_H
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 13
+#define SCRIPTHOOK_VERSION_MINOR 14
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -71,909 +71,33 @@ typedef struct FactionInfo FactionInfo;
 typedef struct MapPixel MapPixel;
 typedef WCHAR **PTextEntry;
 
-static Dictionary *sharedDictionary = (Dictionary *) 0x0275E518; // 1.9
-static Dictionary *battleDictionary = (Dictionary *) 0x0275E51C; // 1.9
-static Dictionary *diplomacyDictionary = (Dictionary *) 0x0275E524; // 1.9
-static Dictionary *stratDictionary = (Dictionary *) 0x0275E520; // 1.9
-static Dictionary *battleEdDictionary = (Dictionary *) 0x0275E528; // 1.9
-static Dictionary *tooltipsDictionary = (Dictionary *) 0x0275E530; // 1.9
-static Dictionary *menuEnglishDictionary = (Dictionary *) 0x0275E540; // 1.9
-static Dictionary *extendedBiDictionary = (Dictionary *) 0x0275E544; // 1.9
-
-enum {
-    DS_ALLIED = 0,
-    DS_SUSPICIOUS = 100,
-    DS_NEUTRAL = 200,
-    DS_HOSTILE = 400,
-    DS_AT_WAR = 600
-};
-
-enum {
-    ORIENTATION_EAST = 0xC000,
-    ORIENTATION_SOUTH = 0x0000,
-    ORIENTATION_WEST = 0x4000,
-    ORIENTATION_NORTH = 0x8000
-};
-
-typedef int Season;
-
-enum {
-    WINTER = 0,
-    SUMMER = 2
-};
-
-enum {
-    ROLE_SPY = 0,
-    ROLE_ASSASSIN,
-    ROLE_DIPLOMAT,
-    ROLE_ADMIRAL,
-    ROLE_CAPTAIN,
-    ROLE_FAMILY_MEMBER
-};
-
-enum {
-    CULTURE_ROMAN = 0,
-    CULTURE_BARBARIAN,
-    CULTURE_CARTHAGINIAN,
-    CULTURE_GREEK,
-    CULTURE_EGYPTIAN,
-    CULTURE_EASTERN,
-    CULTURE_COUNT
-};
-
-enum {
-    BUILDING_TYPE_CORE = 0,
-    BUILDING_TYPE_WALL,
-    BUILDING_TYPE_BARRACKS,
-    BUILDING_TYPE_MARKET = 5,
-    BUILDING_TYPE_PORT = 7,
-    BUILDING_TYPE_SEWERS,
-    BUILDING_TYPE_FARM,
-    BUILDING_TYPE_ROAD,
-    BUILDING_TYPE_COUNT = 64
-};
-
-enum {
-    DEATH_CAUSE_NATURAL = 1,
-    DEATH_CAUSE_TRAGIC = 2,
-    DEATH_CAUSE_BATTLE = 3,
-    DEATH_CAUSE_ASSASSINATION = 4,
-    DEATH_CAUSE_EXECUTION = 5,
-    DEATH_CAUSE_PLAGUE = 7,
-    DEATH_CAUSE_DESERTED = 12,
-};
+#include "rtw/common.h"
+#include "rtw/text.h"
 
 #define ArrayList(type) struct { type **buffer; unsigned int capacity; unsigned int size; }
 
-struct GameDate {
-    int year;
-    Season season;
-};
-
-struct FactionInfo {
-    int unknown;
-    const char *name;
-};
-
-struct Person {
-    int id;
-    PTextEntry *name;
-    int unknown1[9];
-    int command;
-    int influence;
-    int management;
-    int subterfuge;
-    int unknown2[25];
-    int health; // health men have more children & live longer?
-    int unknown3[27];
-    ArrayList(void) retinue;
-    int unknown4[20];
-    Character *character;
-    int unknown5[2];
-    GameDate birthDate;
-    GameDate deathDate;
-    int childrenCount;
-    Faction *faction;
-    int factionID; // id of faction he was born into?
-    int unknown7;
-    Person *father;
-    Person *spouse;
-    Person *children[4];
-    int unknown8[4];
-    int causeOfDeath;
-    void *portrait;
-    int unknown9;
-    void *largePortrait;
-    int unknown10;
-    int unknown12[3];
-    struct {
-        unsigned int isAlive: 1;
-        unsigned int isMale: 1;
-        unsigned int notGeneralYet: 1;
-        unsigned int unknownFlag1: 1;
-        unsigned int unknownFlag2: 1;
-        unsigned int unknownFlag3: 1;
-        unsigned int age: 7;
-    };
-};
-
-struct CharacterType {
-    int role;
-};
-
-struct Character {
-    int unknown0[3];
-    int positionX;     // offset 0x00C
-    int positionY;     // offset 0x010
-    int unknown1;
-    char isVisible;    // offset 0x018
-    float opacity;     // offset 0x01C   0 to 1
-    int unknown2[22];
-    Person *person; // offset 0x078
-    Faction *faction;
-    CharacterType *type;
-    int unknown4[16];
-    float movementPoints; // offset 0x0C4 (read only)
-    int unknown5[7];
-    Army *army;           // offset 0x0E4
-    int unknown6[22];
-    unsigned short orientation;
-    int unknown7;
-    float maxMovementPoints; // offset 0x0148
-};
-
-struct RecruitmentSlot {
-    UnitType *type;
-    int unknown0;
-    Settlement *settlement;
-    unsigned char turnsCompleted;
-    unsigned char percentageCompleted;
-    unsigned char turnsRequired;
-    unsigned char unknown1;
-    int unknown2[4];
-};
-
-struct RecruitmentQueue {
-    RecruitmentSlot queue[9];
-    int head;
-    int tail;
-    int size;
-};
-
-struct ConstructionSlot {
-    int unknown0;             // 0x00
-    int unknown1;             // 0x04
-    int unknown2;             // 0x08
-    Settlement *settlement;   // 0x0C
-    int unknown3;             // 0x10
-    int unknown4;             // 0x14
-    int unknown5;             // 0x18
-    int unknown6;             // 0x1C
-    int turnsRequired;        // 0x20
-    int turnsCompleted;       // 0x24
-    int percentage;           // 0x28
-    int unknown7;             // 0x2C
-    int unknown8;             // 0x30
-    int unknown9;             // 0x34
-};
-
-struct ConstructionQueue {
-    ConstructionSlot queue[6];
-    int head;
-    int tail;
-    int size;
-};
-
-struct CityStats {
-    Settlement *settlement;
-    struct {
-        struct {
-            int baseFarmingLevel;
-            int farmUpgrades;
-            int foodImports;
-            int health;
-            int buildings;
-            int taxes;
-            int unitDisbands;
-            int slavery;
-        } growth;
-        struct {
-            int squalor;
-            int plague;
-            int taxes;
-            int disaster;
-            int taxes2;
-            int taxes3;
-            int draft;
-            int taxes4;
-        } decline;
-        int count;
-    } population;
-    struct {
-        struct {
-            int garrison;
-            int law;
-            int entertainmentBuildings;
-            int governorInfluence;
-            int taxes;
-            int triumph;
-            int wonder;
-            int populationBoom;
-            int entertainment;
-            int health;
-        } positive;
-        struct {
-            int squalor;
-            int distanceToCapital;
-            int culture;
-            int noGovernor;
-            int taxes;
-            int unrest;
-            int underpopulation;
-            int besieged;
-            int blockaded;
-            int recession;
-            int governorReligion;
-            int factionLeaderReligion;
-            int notUsed1;
-            int notUsed2;
-            int notUsed3;
-        } negative;
-        int value; // percentage like seen in the game ui
-    } order;
-    struct {
-        int farms;
-        int taxes;
-        int mining;
-        int trade;
-        int diplomacy;
-        int demolition;
-        int looting;
-        int buildings;
-        int admin;
-    } income;
-    struct {
-        int salaries;
-        int army;
-        int construction;
-        int recruitment;
-        int diplomacy;
-        int corruption;
-        int entertainment;
-        int devastation;
-    } spending;
-};
-
-struct City {
-    Faction *faction;                    // offset in settlement is 0x0DD8
-    Settlement *settlement;
-    int farmingLevel;
-    int unknown0[0xB];
-    int prjSpendingSalaries;             // offset in settlement is 0x0E10
-    int prjSpendingArmy;                 // offset in settlement is 0x0E14
-    int unknown1[0x05];
-    Settlement *settlement2;
-    int unknown[0x6F];
-    CityStats stats;
-};
-
-struct CityBuildings {
-    Building *byType[BUILDING_TYPE_COUNT];
-    Building *list[BUILDING_TYPE_COUNT];  // offset 0x0604  list of all buildings in order of construction
-    int count;                            // offset 0x0704
-};
-
-struct Settlement {
-    int unknown0[3];
-    int posX;
-    int posY;
-    int unknown1[74];
-    void *city3dModel;                // offset 0x013C
-    void *wall3dModel;                // offset 0x0140
-    int unknown2[16];
-    Seaport *port;                    // offset 0x0184
-    const char *name;                 // offset 0x0188
-    int unknown3[2];
-    Faction *faction;                 // offset 0x0194
-    int unknown4[7];
-    int level;                        // offset 0x01B4
-    int culture;                      // offset 0x01B8
-    int unknown5[9];
-    RecruitmentQueue recruitmentQueue; // offset 0x01E0
-    int unknown6[36];
-    ConstructionQueue constructionQueue; // offset 0x039C
-    int unknown7[3];
-    CityBuildings buildings;
-    int unknown8[240];
-    int taxRate;                         // offset 0x0AC8
-    int unknown9[195];
-    City city;                           // offset 0x0DD8
-};
-
-struct MapPixel {
-    int unknonw00;
-    int unknonw04;
-    int unknonw08;
-    int unknonw0C;
-
-    int unknonw10;
-    int region;
-    int unknonw18;
-    int unknonw1C;
-
-    int unknonw20;
-    int unknonw24;
-    int unknonw28;
-    int unknonw2C;
-    int unknonw30;
-};
-
-struct Region {
-    const char *name;
-    int unknown004;
-    const char *settlementName;
-    int unknown00C;
-    int unknown010;
-    int unknown014;
-    int unknown018;
-    int unknown01C;
-    int unknown020;
-    int unknown024;
-    int unknown028;
-    int unknown02C;
-    int unknown030;
-    int unknown034;
-    int unknown038;
-    int unknown03C;
-    int unknown040;
-    int unknown044;
-    int unknown048;
-    int unknown04C;
-    int unknown050;
-    int unknown054;
-    int unknown058;
-    int unknown05C;
-    int unknown060;
-    int unknown064;
-    int unknown068;
-    int unknown06C;
-    int unknown070;
-    int unknown074;
-    int unknown078;
-    int unknown07C;
-    int unknown080;
-    int unknown084;
-    int unknown088;
-    int unknown08C;
-    int unknown090;
-    int unknown094;
-    int unknown098;
-    int unknown09C;
-    int unknown0A0;
-    int unknown0A4;
-    int unknown0A8;
-    int unknown0AC;
-    int unknown0B0;
-    int unknown0B4;
-    int unknown0B8;
-    int unknown0BC;
-    int unknown0C0;
-    int unknown0C4;
-    int unknown0C8;
-    int unknown0CC;
-    int unknown0D0;
-    int unknown0D4;
-    int unknown0D8;
-    int unknown0DC;
-    int unknown0E0;
-    int unknown0E4;
-    int unknown0E8;
-    int unknown0EC;
-    int unknown0F0;
-    int unknown0F4;
-    int unknown0F8;
-    int unknown0FC;
-    int unknown100;
-    int unknown104;
-    int unknown108;
-    int unknown10C;
-    int unknown110;
-    int unknown114;
-    int unknown118;
-    int unknown11C;
-    int unknown120;
-    int unknown124;
-    int unknown128;
-    int unknown12C;
-    int unknown130;
-    int unknown134;
-    int unknown138;
-    int unknown13C;
-    int unknown140;
-    int unknown144;
-    Settlement *settlement;
-    int unknown14C;
-    int unknown150;
-    int unknown154;
-    int unknown158;
-    int unknown15C;
-    int unknown160;
-    int unknown164;
-    int unknown168;
-    int unknown16C;
-    int unknown170;
-    int unknown174;
-    int unknown178;
-    int unknown17C;
-    int unknown180;
-    int unknown184;
-    int unknown188;
-    int unknown18C;
-    int unknown190;
-    int unknown194;
-    int unknown198;
-    int unknown19C;
-    int unknown1A0;
-    int unknown1A4;
-    int unknown1A8;
-    int unknown1AC;
-    int unknown1B0;
-    PTextEntry wName;
-    PTextEntry wSettlementName;
-    int unknown1BC;
-    int unknown1C0;
-    int unknown1C4;
-    int unknown1C8;
-    int unknown1CC;
-    int unknown1D0;
-    int unknown1D4;
-};
-
-struct Regions {
-    int unknonw00;
-    int unknonw04;
-    int unknonw08;
-    int unknonw0C;
-
-    int unknonw10;
-    int unknonw14;
-    int unknonw18;
-    int unknonw1C;
-
-    int unknonw20;
-    int unknonw24;
-    int unknonw28;
-    int mapLength;
-
-    int mapWidth;
-    int unknonw34;
-    int unknonw38;
-    int unknonw3C;
-
-    int unknonw40;
-    int unknonw44;
-    MapPixel *mapPixels;
-    int unknonw4C;
-
-    int unknonw50;
-    int unknonw54;
-    int unknonw58;
-    int unknonw5C;
-
-    int unknonw60;
-    int unknonw64;
-    int unknonw68;
-    int unknonw6C;
-
-    Region regions[MAX_REGION_COUNT];
-    int regionsCount; // how many are actually used
-};
-
-struct UnitType {
-    const char *type; // type from export_descr_unit
-    int unknown0;
-    int unknown1;
-    int unknown2;
-    const char *tga0;
-    int unknown3;
-    const char *tga1;
-    int unknown4[36];
-    const char *dictionary; // dictionary from export_descr_unit
-    int unknown5[4];
-    int menCount; // offset 0xC0 not scaled
-    int unknown6[3];
-    union {
-        struct {
-            unsigned char flags;
-            unsigned char priAttack;
-            unsigned char priAttackCharge;
-        };
-        struct {
-            int unknownFlag0: 1;
-            int hasMelee: 1;
-            int hasChargeBonus: 1;
-            int unknownFlag3: 1;
-            int hasMelee2: 1;
-            int unknownFlag5: 1;
-            int unknownFlag6: 1;
-            int unknownFlag7: 1;
-        };
-    };
-    int unknown7[3];
-    int primaryWeapon; // offset 0x0E0    0 = light, 1 = missile, 2 = heavy
-    int unknown8[3];
-    unsigned char unknown9;
-    unsigned char unknown10;
-    unsigned char secAttack;
-    unsigned char secAttackCharge;
-};
-
-struct SoliderUpgrades {
-    unsigned int unknown0: 12;
-    unsigned int xp: 4;
-    unsigned int unknown1: 7;
-    unsigned int armor: 3;
-    unsigned int weapons: 3;
-    unsigned int unknown2: 3;
-};
-
-struct ArmyUnit {
-    int unknown0[0x10];
-    Army *army;
-    int unknown1[3];
-    UnitType *unitType;
-    int unknown2[136];
-    int calculatedXP;     // offset 0x274 read only
-    Character *general;   // offset 0x278 (Family members only)
-    float movementPoints; // offset 0x27C
-    int soliderCount;     // offset 0x280
-    int unknown3[5];
-    int hasOfficer[4];    // offset 0x298
-    int unknown4[23];
-    union {
-        int calculatedUpgrades;    // read only - cache
-        struct {
-            int unknown5: 8;
-            int weapons: 2;       // read only - cache
-            int unknown6: 3;
-            int armor: 2;         // read only - cache
-            int unknown7: 17;
-        };
-    };
-    int unknown8;
-    SoliderUpgrades *upgrades;       // xp, armor, weapons
-};
-
-struct Army {
-    int unknown0[0x15];
-    Faction *faction;
-    int unknown1;
-    ArrayList(ArmyUnit) units;
-    int unknown3[34];
-    Character *character;
-    int unknown4[6];
-    ArrayList(void) agents;
-};
-
-struct Treasury {
-    Faction *faction;
-    int gold; // current money
-// Not valid for 1.9
-//    int unknown;
-//    struct {
-//        int farming;
-//        int taxes;
-//        int mining;
-//        int trade;
-//        int construction;
-//        int corruption;
-//        int senateTransactions;
-//        int diplomacy;
-//        int diplomacy2; // SuperFaction?
-//        int other;
-//    } income;
-//    struct {
-//        int wages;
-//        int army;
-//        int construction;
-//        int construction2;
-//        int recruitment;
-//        int recruitment2;
-//        int senateTransactions;
-//        int diplomacy;
-//        int diplomacy2; // SuperFaction?
-//        int corruption;
-//        int entertainment;
-//        int other;
-//    } spending;
-};
-
-struct Faction {
-    int unknown0[0x28];
-    int id;                           // offset 0x00A0
-    int culture;                      // offset 0x00A4
-    Settlement *capital;              // offset 0x00A8
-    Person *pLeaderName;              // offset 0x00AC   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    Person *pHeirName;                // offset 0x00B0   (+0x04 => +0x00 => 0x06 = WCHAR name)
-    FactionInfo *info;                // offset 0x00B4
-    int isPlayer;                     // offset 0x00B8
-    int unknown2[4];
-    ArrayList(void) unknown3;
-    int unknown4[2];
-    ArrayList(Person) persons;
-    ArrayList(Character) characters;
-    ArrayList(Army) armies;
-    ArrayList(int) regions;
-    ArrayList(Settlement) settlements;
-    ArrayList(Fort) forts;
-    ArrayList(void) watchtowers;
-    ArrayList(Seaport) ports;
-    int unknown5;
-    ArrayList(void) unknown6;
-    int unknown7;
-    int unknown8;
-    ArrayList(void) unknown9;
-    ArrayList(void) unknown10;
-    int unknown11[5];
-    void *fogOfWar;
-    ArrayList(void) missions;
-    ArrayList(void) unknown12;
-    int unknown13[3];
-    ArrayList(void) unknown14;
-    ArrayList(void) unknown15;
-    ArrayList(void) rankingHistory;
-    int unknown16[2];
-    union {
-        int flags;
-        struct {
-            char autoManageEverything;
-            char unknown0;
-            char unknown1;
-            char autoManageTaxesOnly;
-            float spendingPolicy;
-        };
-    } managementSettings;
-    int unknown17[0xC2];
-    int outdatedTreasury;             // offset 0x04E8    0 or 1
-    int startingMoney;                // offset 0x04EC Gold at the start of turn
-    int unknown18[5];
-    Treasury treasury;
-};
-
-struct Diplomacy {
-    int unknown0;
-
-    /**
-     * 0 = ALLIED, 100 = SUSPICIOUS, 200 = NEUTRAL, 400 = HOSTILE, 600 = AT_WAR
-     * Only accepts these values, some of them are not used in game, like 100 and 400
-     * This value is your standing alone. You can declare war on someone who thinks you are their ally
-     * if you put a value not on this list, the game text may say ally, even if it's 599
-     */
-    int relationship; // offset 0x04
-
-    union {
-        unsigned int receivedAgreements;
-        struct {
-            unsigned int tradeRights: 1; // if your bit is set you have tr
-            unsigned int militaryAccess: 1; // if your bit is set, you have mc
-        };
-    }; // offset 0x08
-
-    union {
-        unsigned int unknownFlags; // offset 0x0C
-        struct {
-            unsigned int unknownFlag00: 1;
-            unsigned int unknownFlag01: 1;
-            unsigned int unknownFlag02: 1;
-            unsigned int protector: 1;         // if your bit is set, you are the slave
-        };
-    };
-
-    // Hate from 0 to 1000, (AKA core_attitudes, wait? is AKA involved with KKK?)
-    // How much do you hate?
-    int hate; // offset 0x10
-
-    int unknown1;
-
-    /**
-     * How many cumulative turns have you been in alliance for since start of game
-     */
-    int allianceTurns;
-
-    /**
-     * How many cumulative turns have you been at war for since start of game
-     */
-    int hostilityTurns;
-
-    int unknonw2;
-    int unknonw3;
-    int unknonw4;
-    int unknonw5;
-    int unknonw6;
-    int unknonw7;
-    int unknonw8;
-
-    struct {
-        int amount; // offset 0x3C
-        int turns; // offset 0x40
-    } receivedTribute;
-
-    int unknonw9;
-    int unknonw10;
-    int unknonw11;
-    int unknonw12;
-    int unknonw13;
-    int unknonw14;
-    int unknonw15;
-    int unknonw16;
-    int unknonw17;
-
-    /**
-     * turns since last diplomatic contact
-     */
-    int turnsSinceLastContact;
-
-    /**
-     * NEEDS MORE TESTING
-     * Make a deal +1, cancel a deal -1, fail to reach deal -1.
-     */
-    int reputation;
-
-    /**
-     * related to reputation somehow, for good deals, it starts negative, for bad actions it's positive,
-     * it loses value over time approaching zero
-     * Anger?
-     */
-    int unknown18;
-};
-
-typedef Diplomacy FactionDiplomacy[21];
-
-struct Campaign {
-    int unknown0[0x5A]; // offset 0 size 0x168
-    Faction *factions[21]; // offset 0x168 size 0x54
-    Faction *sortedFactions[21]; // offset 0x168 size 0x54
-    int factionCount;
-    int unknown1[6];
-    Faction *activeFaction;
-    int activeFactionId;
-    int unknown2[7];
-    char endTurn; // set to non-zero to end the turn
-    char restartTurns; // set to non-zero to give the turn back to first faction
-    int unknown3[41];
-    GameDate currentDate; // offset 0x2F8 = 760
-    GameDate startDate;
-    GameDate endDate;
-    int unknown4[140];
-    FactionDiplomacy diplomacy[21]; // offset 0x540 = 1344
-};
-
-struct CultureCityModel { // size should be 180 = 0x6C
-    struct {
-        int unknown[4];
-    } cityModel;
-    struct {
-        int unknown[4];
-    } walls[5];
-    struct {
-        int unknown[3];
-    } card;
-};
-
-struct CultureModels { // size should be 1176 = 0x498
-    CultureCityModel cityModel[6]; // one for each level (village, town, l town, m city, l city, h city)
-    int unknown[131];
-    int maxCityLevel;
-};
-
-struct CultureData {
-    int unknown[0x5B];
-    CultureModels cultureModels[CULTURE_COUNT];
-};
-
-struct BuildingTypeList {
-    BuildingType *array;                  // offset 0x00
-    BuildingTypeList *next;               // offset 0x04
-    BuildingTypeList *parent;             // offset 0x08
-    int capacity;                         // offset 0x0C
-    int size;                             // offset 0x10
-};
-
-struct BuildingLevel { // size 1E0 = 480
-    int unknown0[0x71];
-    void *restrictions;    // offset 0x1C4
-    unsigned short cost;   // offset 0x1C8
-    unsigned short turns;  // offset 0x1CA
-    int requiredCityLevel; // offset 0x1CC
-    int unknown1;
-    void *RecruitmentCapabilities;
-    int unknown2[2];
-};
-
-struct BuildingType { // size 0x84 = 132
-    void *_cpp_class;       // offset 0x00 (I should've done this with everything instead of calling it unknown)
-    int unknown0[4];
-    int type;               // offset 0x14  see BUILDING_TYPE_*
-    int unknown1[17];
-    char isWall;
-    char isPort;
-    char isCore;
-    int unknown2;
-    int unknown3;
-    const char *name;       // offset 0x68
-    int unknown4;
-    BuildingLevel *levels;  // offset 0x70
-    void *restrictions;     // offset 0x74
-    int levelCount;         // offset 0x78
-    int unknown5[2];
-};
-
-struct Building {
-    int unknown0[11];
-    BuildingType *type;        // offset 0x2C
-    unsigned char level;       // offset 0x30
-    int unknown1[5];
-    int buildByFaction;        // offset 0x48
-    int health;                // offset 0x4C
-    int unknown2[4];
-    Settlement *settlement;    // offset 0x60
-};
-
-struct PopulationLimits {
-    /**
-     * Minimum required for this level
-     */
-    int levelMin;
-
-    /**
-     * How many idiot it takes to get to the next level
-     */
-    int nextLevel;
-
-    /**
-     * Population can't be less that this, and will jump to be equal at
-     * the end of turn if it becomes smaller
-     */
-    int absoluteMinimum;
-
-    /**
-     * Squalor will increase significantly if this threshold is exceeded
-     */
-    int overPopulationThreshold;
-};
-
-struct Seaport {
-    int unknown0[3];
-    int villagePosX;
-    int villagePosY;
-    int unknown1[7];
-    Settlement *settlement;
-    int region;
-    unsigned short orientation;
-    int level;
-    int culture;
-    int unknown2[3];
-    int posX;
-    int posY;
-    int rallyPointX;
-    int rallyPointY;
-    int unknown3;
-    Faction *faction;
-    int unknown4[3];
-    void *village3DModel;
-    void *port3DModel;
-};
-
-struct Fort {
-    int unknown0[3];
-    int posX;
-    int posY;
-    int unknown1[11];
-    Army *army;
-    int unknown2[40];
-    int region;
-    Faction *faction;
-};
+#include "rtw/date.h"
+#include "rtw/person.h"
+#include "rtw/character.h"
+#include "rtw/recruitment.h"
+#include "rtw/construction.h"
+#include "rtw/city_stats.h"
+#include "rtw/building.h"
+#include "rtw/city.h"
+#include "rtw/settlement.h"
+#include "rtw/world_map.h"
+#include "rtw/region.h"
+#include "rtw/regions.h"
+#include "rtw/unit_type.h"
+#include "rtw/army_unit.h"
+#include "rtw/army.h"
+#include "rtw/diplomacy.h"
+#include "rtw/faction.h"
+#include "rtw/campaign.h"
+#include "rtw/culture.h"
+#include "rtw/population_limits.h"
+#include "rtw/seaport.h"
+#include "rtw/fort.h"
 
 /**
  *  initializes scripthook & native functions
@@ -1093,10 +217,22 @@ SCRIPTHOOK_API void *rtw_city_get_3D_model(int culture, int level);
 SCRIPTHOOK_API void *rtw_city_get_wall_3D_model(int culture, int cityLevel, int wallLevel);
 
 /**
- * Returns the list of building types from export_descr_buildings.txt
+ * Returns the list of building types loaded from export_descr_buildings.txt
  * @return A linked list with arrays as sub-lists on every node
  */
 SCRIPTHOOK_API BuildingTypeList *rtw_get_building_types();
+
+/**
+ * Returns the list of unit types loaded from export_descr_units.txt
+ * @return An array of UnitType
+ */
+UnitType *rtw_get_unit_types();
+
+/**
+ * Returns the number of unit types loaded from export_descr_units.txt
+ * @return The number of loaded unit types
+ */
+int rtw_get_unit_types_count();
 
 /**
  * Returns a pointer to the global limits on population. Changing
@@ -1130,11 +266,18 @@ SCRIPTHOOK_API void rtw_update_text(PTextEntry *entry, const WCHAR *text);
 SCRIPTHOOK_API void rtw_building_destroy(Building *building);
 
 /**
- * Returns a region
+ * Returns a region by id
  * @param id
  * @return null if the id is not valid
  */
 SCRIPTHOOK_API Region *rtw_get_region(int id);
+
+/**
+ * Returns a pointer to the regions data
+ * @param id
+ * @return a pointer to regions data
+ */
+SCRIPTHOOK_API Regions *rtw_get_regions();
 
 /**
  * Processes (marriage & having children) a person and ages them if the season
@@ -1260,6 +403,16 @@ struct Script {
      * @return OPTION_DEFAULT for default game behavior, OR OPTION_PREVENT OR OPTION_ALLOW
      */
     int (*on_character_death_check)(Character *);
+
+    /**
+     * Called when a building is damaged by sabotage (or something else)
+     */
+    void (*on_building_take_damage)(Building *);
+
+    /**
+     * Called every game tick while on the campaign map
+     */
+    void (*on_campaign_tick)();
 };
 
 #define EXPORT_HOOK(x) script-> x = x;

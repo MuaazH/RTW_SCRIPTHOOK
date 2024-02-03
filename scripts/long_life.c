@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-26.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2024-01-26.
 // This mod makes generals with higher command live longer
 
 #include <scripthook.h>

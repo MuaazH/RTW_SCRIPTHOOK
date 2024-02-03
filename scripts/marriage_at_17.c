@@ -1,4 +1,4 @@
-// Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-25.
+// Created by MuaazH (muaaz.h.is@gmail.com) on 2024-01-25.
 // This script forces every general to get married at the age of 17
 
 #include <scripthook.h>

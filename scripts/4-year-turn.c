@@ -1,11 +1,11 @@
 // Created by MuaazH <muaaz.h.is@gmail.com> on 2024-01-18.
-// This scripts adds 4 more years to each yearsInTurn
+// This scripts adds 4 more years to each turn
 // Requested by: Sarmatian Smilodon
 
 #include <scripthook.h>
 //#include <str_builder.h>
 
-//static const char *SCRIPT = "scripts/4-year-yearsInTurn.c";
+//static const char *SCRIPT = "scripts/4-year-turn.c";
 static const int years_in_turn = 4;
 static const int seasons_in_year = 2;
 

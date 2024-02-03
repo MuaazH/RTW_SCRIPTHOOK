@@ -5,17 +5,16 @@
 #include <tccdefs.h>
 
 const char *active_scripts[] = {
-        "scripts/sticky-fort.c",
-        "scripts/tribute-fix.c",
-        "scripts/larger-population.c",
-        "scripts/no-taxes.c",
-        "scripts/demolition.c",
-        "scripts/happy_cities_cheat.c",
-        "scripts/marriage_at_17.c",
-        "scripts/boys_only.c",
-        "scripts/long_life.c",
-        "scripts/golden_weapons.c",
-//        "scripts/rabbits.c",
+        "sticky-fort.c",
+        "tribute-fix.c",
+        "larger-population.c",
+        "no-taxes.c",
+        "demolition.c",
+        "happy_cities_cheat.c",
+        "marriage_at_17.c",
+        "boys_only.c",
+        "long_life.c",
+        "golden_weapons.c",
 
 
 

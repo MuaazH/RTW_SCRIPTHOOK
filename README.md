@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-    <img src="scripts/lib/APES.png" alt="NAZI JEWS">
+    <img src="ModManager/ANTI_HUMAN.png" alt="NAZI JEWS">
 
    26,751 CIVILIANS KILLED<br>
    12,000 CHILDREN KILLED<br>
@@ -9,7 +9,7 @@
 Good people don't kill that many, only psychopaths do
 </div>
 
-# Rome total war 1.9 scripthook (Version 2.12.0)
+# Rome total war 1.9 scripthook (Version 2.13.0)
 
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.
@@ -35,11 +35,17 @@ d3d8.dll                 <- asi loader
 libtcc.dll               <- tiny c compiler
 scriptHook.asi           <- the plugin
 scripts                  <- scripts & sdk
+ModManager               <- app to enable/disable scripts
 ```
 
 (Only works with RomeTW-ALX.exe v1.9)<br>
 
 if you get a missing dll error, install VC++2013 form Microsoft
+
+# HOW TO USE (NEW)
+Mod Manager now lets you easily enable and disable scripts
+Watch [Video on youtube](https://www.youtube.com/watch?v=9Zdui1Co5is)
+
 
 # HOW IT WORKS
 

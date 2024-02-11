@@ -14,7 +14,7 @@ enum {
 
 struct Person {
     int id;
-    PTextEntry *name;
+    PTextEntry name;
     int unknown1[9];
     int command;
     int influence;

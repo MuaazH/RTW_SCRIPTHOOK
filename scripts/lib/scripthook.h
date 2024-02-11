@@ -6,7 +6,7 @@
 #define RTW_SCRIPT_HOOK_H
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 14
+#define SCRIPTHOOK_VERSION_MINOR 16
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -17,10 +17,7 @@
 #define SCRIPTHOOK_API extern
 
 // debug functions
-extern int sprintf_s(char *_DstBuf, unsigned int _DstSize, const char *_Format, ...);
-
 extern void rtw_log(const char *script, const char *msg);
-
 #endif
 
 
@@ -36,6 +33,9 @@ extern void rtw_log(const char *script, const char *msg);
 typedef unsigned short WCHAR;
 typedef struct Character Character;
 typedef struct CharacterType CharacterType;
+typedef struct TrainableUnit TrainableUnit;
+typedef struct TrainableAgent TrainableAgent;
+typedef struct SettlementCapabilities SettlementCapabilities;
 typedef struct Settlement Settlement;
 typedef struct Region Region;
 typedef struct Regions Regions;
@@ -55,6 +55,7 @@ typedef struct ConstructionQueue ConstructionQueue;
 typedef struct Building Building;
 typedef struct BuildingType BuildingType;
 typedef struct BuildingLevel BuildingLevel;
+typedef struct RecruitmentCapability RecruitmentCapability;
 typedef struct BuildingTypeList BuildingTypeList;
 typedef struct CityBuildings CityBuildings;
 typedef struct City City;
@@ -84,6 +85,7 @@ typedef WCHAR **PTextEntry;
 #include "rtw/city_stats.h"
 #include "rtw/building.h"
 #include "rtw/city.h"
+#include "rtw/recruitment_capabilities.h"
 #include "rtw/settlement.h"
 #include "rtw/world_map.h"
 #include "rtw/region.h"
@@ -324,8 +326,6 @@ void rtw_unit_update_upgrades_cache(ArmyUnit *unit);
 // ===========================================
 // END OF GAME RELATED CRAP
 // ===========================================
-
-#define DECLARE_SCRIPT static Script script;
 
 typedef struct Script Script;
 

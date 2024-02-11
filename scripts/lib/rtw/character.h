@@ -4,15 +4,16 @@
 
 enum {
     ROLE_SPY = 0,
-    ROLE_ASSASSIN,
-    ROLE_DIPLOMAT,
-    ROLE_ADMIRAL,
-    ROLE_CAPTAIN,
-    ROLE_FAMILY_MEMBER
+    ROLE_ASSASSIN = 1,
+    ROLE_DIPLOMAT = 2,
+    ROLE_ADMIRAL = 3,
+    ROLE_CAPTAIN = 4,
+    ROLE_FAMILY_MEMBER = 5
 };
 
 struct CharacterType {
     int role;
+    // todo: find-out more
 };
 
 struct Character {

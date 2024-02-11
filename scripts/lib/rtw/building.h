@@ -14,6 +14,11 @@ enum {
     BUILDING_TYPE_COUNT = 64
 };
 
+enum {
+    RECRUITMENT_TYPE_ARMY_UNIT = 1,
+    RECRUITMENT_TYPE_AGENT = 2
+};
+
 struct BuildingTypeList {
     BuildingType *array;                  // offset 0x00
     BuildingTypeList *next;               // offset 0x04
@@ -29,8 +34,24 @@ struct BuildingLevel { // size 1E0 = 480
     unsigned short turns;  // offset 0x1CA
     int requiredCityLevel; // offset 0x1CC
     int unknown1;
-    void *RecruitmentCapabilities;
+    RecruitmentCapability *recruitmentCapability;
     int unknown2[2];
+};
+
+struct RecruitmentCapability {
+    /**
+     * can be RECRUITMENT_TYPE_UNIT or RECRUITMENT_TYPE_AGENT
+     */
+    int type;
+    int unknown04;
+    int unknown08;
+    int unknown0C;
+    union {
+        int unitTypeIndex;
+        int agentRole;
+    };
+    void *condition;
+    RecruitmentCapability *next;
 };
 
 struct BuildingType { // size 0x84 = 132

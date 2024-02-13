@@ -5,8 +5,10 @@
 #ifndef RTW_SCRIPT_HOOK_H
 #define RTW_SCRIPT_HOOK_H
 
+#include "str_builder.h"
+
 #define SCRIPTHOOK_VERSION_MAJOR 2
-#define SCRIPTHOOK_VERSION_MINOR 15
+#define SCRIPTHOOK_VERSION_MINOR 16
 #define SCRIPTHOOK_VERSION_PATCH 0
 
 
@@ -102,9 +104,9 @@ typedef WCHAR **PTextEntry;
 #include "rtw/fort.h"
 
 /**
- *  initializes scripthook & native functions
+ *  reloads scripts loaded in scripthook
  */
-SCRIPTHOOK_API void rtw_scripthook_init();
+SCRIPTHOOK_API void rtw_reload_scripts();
 
 /**
  * Writes bytes to memory
@@ -327,6 +329,15 @@ void rtw_unit_update_upgrades_cache(ArmyUnit *unit);
 // END OF GAME RELATED CRAP
 // ===========================================
 
+typedef void (*CommandCallback)(int argc, const char **argv, StrBuilder *outputSb);
+
+typedef struct ConsoleCommand ConsoleCommand;
+
+struct ConsoleCommand {
+    const char *cmd;
+    CommandCallback callback;
+};
+
 typedef struct Script Script;
 
 struct Script {
@@ -413,6 +424,22 @@ struct Script {
      * Called every game tick while on the campaign map
      */
     void (*on_campaign_tick)();
+
+    /**
+     * Called to check if marian_reforms should be enabled or not
+     * @return OPTION_DEFAULT for default game behavior, OR OPTION_PREVENT OR OPTION_ALLOW
+     */
+    int (*on_marian_reforms_check)();
+
+    /**
+     * Pointer to console commands this script adds to the game
+     */
+    ConsoleCommand **consoleCommands;
+
+    /**
+     * Number of console commands this script adds to the game
+     */
+    int consoleCommandCount;
 };
 
 #define EXPORT_HOOK(x) script-> x = x;

@@ -6,17 +6,18 @@
 
 const char *active_scripts[] = {
 // BEGIN: SCRIPT LIST
-    "sticky_fort.c",
-    "unit_types_dbg.c",
-    "damaged_buildings.c",
-    "demolition.c",
-    "long_life.c",
-    "happy_cities_cheat.c",
-    "boys_only.c",
-    "no_taxes.c",
-    "larger_population.c",
-    "tribute_fix.c",
-    "wall_bug_fix.c",
+        "sticky_fort.c",
+        "damaged_buildings.c",
+        "demolition.c",
+        "long_life.c",
+        "happy_cities_cheat.c",
+        "boys_only.c",
+        "no_taxes.c",
+        "larger_population.c",
+        "tribute_fix.c",
+        "wall_bug_fix.c",
+        "marian_reforms.c",
+        "scripthook_commands.c",
 // END: SCRIPT LIST
 
         0 // THE LAST THING ON THE LIST, DO NOT REMOVE

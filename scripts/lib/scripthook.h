@@ -9,7 +9,7 @@
 
 #define SCRIPTHOOK_VERSION_MAJOR 2
 #define SCRIPTHOOK_VERSION_MINOR 16
-#define SCRIPTHOOK_VERSION_PATCH 0
+#define SCRIPTHOOK_VERSION_PATCH 1
 
 
 #ifdef SCRIPTHOOK_ASI
@@ -50,9 +50,9 @@ typedef struct Diplomacy Diplomacy;
 typedef struct GameDate GameDate;
 typedef struct Faction Faction;
 typedef struct Treasury Treasury;
-typedef struct RecruitmentSlot RecruitmentSlot;
+typedef struct Recruitment Recruitment;
 typedef struct RecruitmentQueue RecruitmentQueue;
-typedef struct ConstructionSlot ConstructionSlot;
+typedef struct Construction Construction;
 typedef struct ConstructionQueue ConstructionQueue;
 typedef struct Building Building;
 typedef struct BuildingType BuildingType;
@@ -87,7 +87,7 @@ typedef WCHAR **PTextEntry;
 #include "rtw/city_stats.h"
 #include "rtw/building.h"
 #include "rtw/city.h"
-#include "rtw/recruitment_capabilities.h"
+#include "rtw/settlement_capabilities.h"
 #include "rtw/settlement.h"
 #include "rtw/world_map.h"
 #include "rtw/region.h"

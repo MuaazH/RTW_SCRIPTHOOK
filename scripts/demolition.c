@@ -3,7 +3,6 @@
 // Maybe I'll add mines later when I've figured out how to fix the visuals
 
 #include <scripthook.h>
-#include <str_builder.h>
 
 const char *SCRIPT = "scripts/demolition.c";
 
@@ -11,10 +10,16 @@ const char *SCRIPT = "scripts/demolition.c";
  * Called from scripthook.asi
  */
 int on_demolition_check(Building *building) {
-    if (!building->type)
-        return OPTION_DEFAULT; // I ain't touch this shit
-
     BuildingType *type = building->type;
+
+//    char buf[128];
+//    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
+//    sb_reset(&sb);
+//    sb_str(&sb, "Building name: ");
+//    sb_str(&sb, type->name);
+//    sb_str(&sb, ", type id: ");
+//    sb_i32(&sb, type->type);
+//    rtw_log(SCRIPT, buf);
 
     // walls & core
     if (type->isWall || type->isCore)
@@ -27,21 +32,21 @@ int on_demolition_check(Building *building) {
     return OPTION_DEFAULT;
 }
 
-/**
- * Called from scripthook.asi
- */
-void on_demolition(Settlement *settlement, Building *building) {
-    // todo: remove me. I'm used for debug only
-    char buf[128];
-    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
-    sb_str(&sb, building->type->name);
-    sb_str(&sb, " demolished in ");
-    sb_str(&sb, settlement->name);
-    rtw_log(SCRIPT, buf);
-}
+///**
+// * Called from scripthook.asi
+// */
+//void on_demolition(Settlement *settlement, Building *building) {
+//    // todo: remove me. I'm used for debug only
+//    char buf[128];
+//    StrBuilder sb = NEW_STRING_BUILDER(buf, sizeof(buf));
+//    sb_str(&sb, building->type->name);
+//    sb_str(&sb, " demolished in ");
+//    sb_str(&sb, settlement->name);
+//    rtw_log(SCRIPT, buf);
+//}
 
 void init_hooks(Script *script) {
     EXPORT_HOOK(on_demolition_check);
-    EXPORT_HOOK(on_demolition);
+//    EXPORT_HOOK(on_demolition);
 }
 

@@ -20,6 +20,7 @@ static const WCHAR *oldDescription = L"Low tax rate";
 static const WCHAR *newDescription = L"No taxes"; // MUST be shorter or equal to original
 static PTextEntry *pDescription = 0;
 
+static const char *SCRIPT = "no_taxes.c";
 
 /**
  * Called from scripthook.asi

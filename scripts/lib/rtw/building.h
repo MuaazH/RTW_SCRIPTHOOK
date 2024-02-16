@@ -7,7 +7,8 @@ enum {
     BUILDING_TYPE_WALL,
     BUILDING_TYPE_BARRACKS,
     BUILDING_TYPE_MARKET = 5,
-    BUILDING_TYPE_PORT = 7,
+    BUILDING_TYPE_BLACKSMITH,
+    BUILDING_TYPE_PORT,
     BUILDING_TYPE_SEWERS,
     BUILDING_TYPE_FARM,
     BUILDING_TYPE_ROAD,
@@ -40,7 +41,7 @@ struct BuildingLevel { // size 1E0 = 480
 
 struct RecruitmentCapability {
     /**
-     * can be RECRUITMENT_TYPE_UNIT or RECRUITMENT_TYPE_AGENT
+     * can be RECRUITMENT_TYPE_ARMY_UNIT or RECRUITMENT_TYPE_AGENT
      */
     int type;
     int unknown04;

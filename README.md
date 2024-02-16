@@ -1,16 +1,17 @@
-<div style="text-align: center;">
+<p style="text-align: center;">
     <img src="ModManager/ANTI_HUMAN.png" alt="NAZI JEWS">
 
    50,000+ CIVILIANS KILLED<br>
    15,000+ CHILDREN KILLED<br>
    80,000+ INSURED CIVILIANS<br>
-   2,000,000 HOMELESS PEOPLE (FOR NOW, THEY WILL SOON DIE)<br>
-</div>
-<div style="text-align: center; font-size: 400%">
-Good people don't kill that many, only vile animals do
-</div>
+   1,900,000 HOMELESS PEOPLE (FOR NOW, THEY WILL SOON DIE)<br>
 
-# Rome total war 1.9 scripthook (Version 2.16.0)
+   Good people don't kill that many, only vile animals do
+</p>
+
+
+
+# Rome total war 1.9 scripthook (Version 2.16.1)
 
 A scripting plugin you add to the game to then write scripts in C.
 Wait scripts in C? Yes in Goddamn C.

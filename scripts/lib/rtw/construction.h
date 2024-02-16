@@ -2,7 +2,7 @@
 // Created by MuaazH (muaaz.h.is@gmail.com) on 2024-02-03.
 //
 
-struct ConstructionSlot {
+struct Construction {
     int unknown0;             // 0x00
     int unknown1;             // 0x04
     int unknown2;             // 0x08
@@ -20,7 +20,7 @@ struct ConstructionSlot {
 };
 
 struct ConstructionQueue {
-    ConstructionSlot queue[6];
+    Construction queue[6];
     int head;
     int tail;
     int size;
